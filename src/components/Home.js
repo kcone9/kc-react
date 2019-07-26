@@ -71,6 +71,9 @@ class Home extends React.Component {
     componentDidUpdate() {
         this.lazy()
     }
+    componentWillUnmount(){
+        this.setState=()=>{}
+    }
     autonews = () => {
         setInterval(() => {
             var num = this.state.newmargin
