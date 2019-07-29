@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Home from "./components/Home"
-import House from "./components/House"
+import routes from "./routes"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
 class App extends React.Component {
   constructor(props) {
@@ -9,15 +8,18 @@ class App extends React.Component {
   }
   render() {
     return (<Router><div>
-      <Route exact path="/" component={Home}></Route>
-      <Route path="/house" component={House}></Route>
-      
-      
+      {
+        routes.map((route,key)=>{
+          if(route.exact){
+            return (<Route key={key} exact path={route.path} component={route.component}></Route>)
+          }else{
+            return (<Route key={key} path={route.path} component={route.component}></Route>)
+          }
+        })
+      }
     </div></Router>
-
     )
   }
 
 }
-
 export default App;

@@ -5,7 +5,8 @@ import Swiper from "swiper"
 import axios from "axios"
 import loadimg from "../image/loading.gif"
 import Footer from "./son/Footer"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
+import { push_uniq } from "terser";
 class Home extends React.Component {
     constructor(props) {
         super(props)
@@ -25,9 +26,8 @@ class Home extends React.Component {
             { title: "http://cdn.lou86.com/public/uploads/slider/20190514/e2971599a706b6fc0cc70188ef77c446.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190509/c38b63ec6f6fcd5165aa640a75caf076.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190601/1d47ae6b9affb0f2a652ec904cadc741.jpg" }],
-            acttop: [],
-            actbottom: [],
-            rec: [],
+            acttop: [], actbottom: [], rec: [], find: ["6千以下", "6-7千", "7-8千", "8千-1万", "1万-1.3万", "1.3-1.5万", "1.5-2万", "2万以上"],
+            find_type: [],
             imgnum: 0,
             dataswitch: false
         }
@@ -55,6 +55,7 @@ class Home extends React.Component {
             }
             this.setState({ rec: list, dataswitch: true })
         })
+        this.btn_math()
     }
     componentDidMount = () => {
         var mySwiper = new Swiper('.swiper-container', {
@@ -72,8 +73,8 @@ class Home extends React.Component {
     componentDidUpdate() {
         this.lazy()
     }
-    componentWillUnmount(){
-        this.setState=()=>{}
+    componentWillUnmount() {
+        this.setState = () => { }
     }
     autonews = () => {
         setInterval(() => {
@@ -128,11 +129,23 @@ class Home extends React.Component {
             }
             addObserver();
         }
+        
+    }
+    btn_math  () {
+        var color = ["#48b3e2", "#f07c69", "#5ccc8e", "#52c2c2", "#739bec", "#cb87de"]
+        var list = ["海景房", "报销机票", "精装修", "特色别墅", "专车看房", "小户型", "免费接机"]
+        var row=[]
+        for (var i = 0; i < list.length; i++) {
+            var num = Math.floor(Math.random() * color.length)
+            row.push({color:color[num],text:list[i]})
+        }
+        console.log(row)
+        this.setState({find_type:row})
     }
     render() {
 
         return (<div>
-            <div className="header">
+            <div className="home_header">
                 <div className="h3">
                     <img src="http://m.lou86.com/public/static/phone/image/logo.png" />
                 </div>
@@ -241,13 +254,30 @@ class Home extends React.Component {
                     <span>快捷找房</span>
                 </div>
                 <div className="area">
-                    <div className="start"></div><span></span>
+                    <div className="start">区域:</div>
+                    <span>吉阳区</span>
+                    <span>海棠区</span>
+                    <span>天涯区</span>
+                    <span>崖州区</span>
                 </div>
                 <div className="price">
-                <div className="start"></div><span></span>
+                    <div className="start">价格:</div>
+                    {
+                        this.state.find.map((value, key) => {
+                            return (<span key={key}>{value}</span>)
+                        })
+                    }
+                </div>
+                <div className="find_type">
+                    {
+                        this.state.find_type.map((value, key) => {
+                            return (<button key={key} style={{color:value.color,border:"1px solid "+value.color}}>{value.text}</button>)
+                        })
+                    }
+
                 </div>
             </div>
-            <div className="rec"  ref="kcone">
+            <div className="rec" ref="kcone">
                 <div className="title">
                     <span>新房推荐</span>
                 </div>
@@ -269,7 +299,7 @@ class Home extends React.Component {
                                 <div className="left"><span>{value.site}</span></div>
                                 <button>电话咨询</button>
                             </div>
-                            
+
                         </div>)
                     })
                 }
@@ -277,7 +307,7 @@ class Home extends React.Component {
             <div className="home_more">
                 <Link to="/house">查看更多</Link>
             </div>
-            
+
             <Footer></Footer>
         </div>)
     }
