@@ -1,0 +1,34 @@
+%flex{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.footer_head{
+    background-color:#464754;
+    .nav{
+        width:90%;
+        // border:1px solid red;
+        margin:0 auto;
+        $height:2.8rem;
+        display:flex;
+        color:#fff;
+        align-items:center;
+        border-bottom:1px solid #5f6073;
+        .four{
+            width:24%;
+            // border:1px solid red;
+            height:$height;
+            @extend %flex;
+            font-size:0.9rem;
+        }
+    }
+    .footer_down{
+        width:100%;
+        height:3.8rem;
+        // border:1px solid red;
+        @extend %flex;
+        flex-direction:column;
+        color:#878787;
+        font-size:0.9rem;
+    }
+}

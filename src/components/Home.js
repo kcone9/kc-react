@@ -4,6 +4,7 @@ import "../css/swiper.min.css"
 import Swiper from "swiper"
 import axios from "axios"
 import loadimg from "../image/loading.gif"
+import Footer from "./son/Footer"
 import {Link} from "react-router-dom"
 class Home extends React.Component {
     constructor(props) {
@@ -106,7 +107,7 @@ class Home extends React.Component {
             var observer = new IntersectionObserver(function (changes) {
                 changes.forEach(function (item, index) {
                     if (item.isIntersecting) {
-                        if (item.target.getAttribute('src') == '/static/media/loading.ccf68734.gif') {
+                        if (item.target.getAttribute('src') === '/static/media/loading.ccf68734.gif') {
                             setTimeout(() => {
                                 item.target.src = item.target.getAttribute('data-src')
                             }, 500)
@@ -235,18 +236,30 @@ class Home extends React.Component {
                     </div>
                 </div>
             </div>
-            <div className="rec" id="rec" ref="kcone">
+            <div className="home_find">
+                <div className="title">
+                    <span>快捷找房</span>
+                </div>
+                <div className="area">
+                    <div className="start"></div><span></span>
+                </div>
+                <div className="price">
+                <div className="start"></div><span></span>
+                </div>
+            </div>
+            <div className="rec"  ref="kcone">
                 <div className="title">
                     <span>新房推荐</span>
                 </div>
                 {
                     this.state.rec.map((value, key) => {
                         return (<div className="content" key={key} >
-                            <div className="img"><img src={value.load} data-src={value.img} ref={"img" + key}></img>
+                            <div className="img"><img src={value.load} data-src={value.img} ></img>
                                 <div className="abs">
                                     <div className="titles">{value.title}</div>
                                     <div className="price">约<span>{value.price}</span>{value.price < 1000 ? "万/套" : "元/㎡"}</div>
                                 </div>
+                                <div className="label" >在售</div>
                             </div>
                             <div className="intro">
                                 <div className="left"><span>{value.letter}</span></div>
@@ -256,11 +269,16 @@ class Home extends React.Component {
                                 <div className="left"><span>{value.site}</span></div>
                                 <button>电话咨询</button>
                             </div>
+                            
                         </div>)
                     })
                 }
             </div>
-            <Link to="/house">查看更多</Link>
+            <div className="home_more">
+                <Link to="/house">查看更多</Link>
+            </div>
+            
+            <Footer></Footer>
         </div>)
     }
 }
