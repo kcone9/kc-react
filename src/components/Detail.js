@@ -7,15 +7,15 @@ class Detail extends React.Component {
         super(props)
         this.state = {
             nav: ["主页", "详情", "户型", "配套", "问答"], fold: "10rem", fold_text: "查看更多",
-            domain:"http://cdn.lou86.com",
-            mating:[{img:"/public/static/phone/img/icons/ico_44.png",text:"学校"},
-        {img:"/public/static/phone/img/icons/ico_45.png",text:"医院"},
-        {img:"/public/static/phone/img/icons/ico_46.png",text:"交通"},
-        {img:"/public/static/phone/img/icons/ico_47.png",text:"餐饮"},
-        {img:"/public/static/phone/img/icons/ico_48.png",text:"娱乐"},
-        {img:"/public/static/phone/img/icons/ico_49.png",text:"娱乐"},
-        {img:"/public/static/phone/img/icons/ico_50.png",text:"银行"}],
-        son:false,son_arr:[{text:"推荐楼盘",cb:true},{text:"热销楼盘",cb:false}]
+            domain: "http://cdn.lou86.com",
+            mating: [{ img: "/public/static/phone/img/icons/ico_44.png", text: "学校" },
+            { img: "/public/static/phone/img/icons/ico_45.png", text: "医院" },
+            { img: "/public/static/phone/img/icons/ico_46.png", text: "交通" },
+            { img: "/public/static/phone/img/icons/ico_47.png", text: "餐饮" },
+            { img: "/public/static/phone/img/icons/ico_48.png", text: "娱乐" },
+            { img: "/public/static/phone/img/icons/ico_49.png", text: "娱乐" },
+            { img: "/public/static/phone/img/icons/ico_50.png", text: "银行" }],
+            son: false, son_arr: [{ text: "推荐楼盘", cb: true }, { text: "热销楼盘", cb: false }]
         }
     }
     componentWillMount() {
@@ -30,10 +30,29 @@ class Detail extends React.Component {
         }
         this.setState({ nav: row })
     }
-    shouldComponentUpdate(nextprops,nextstate){
-
-        return true
+    componentDidMount() {
+        var BMap=window.BMap
+        var map = new BMap.Map("map");
+        var point = new BMap.Point(109.507708,18.266495);
+        map.centerAndZoom(point, 15);
+        
+        var infor=new BMap.InfoWindow("怡海湾别墅")
+        map.openInfoWindow(infor,map.getCenter())
+        // var opts = {    
+        //     width : 80,     // 信息窗口宽度    
+        //     height: 60,     // 信息窗口高度    
+        //     title : "Hello"  // 信息窗口标题   
+        // }    
+        // var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象    
+        // map.openInfoWindow(infoWindow, map.getCenter());
+        
+        
+        
     }
+    // shouldComponentUpdate(nextprops, nextstate) {
+
+    //     return true
+    // }
     fold = () => {
         if (this.state.fold == "10rem") {
             var num = ""
@@ -44,20 +63,19 @@ class Detail extends React.Component {
         }
         this.setState({ fold: num, fold_text: text })
     }
-    son=(e)=>{
-        var list=this.state.son_arr
-        for(var li of list){
-            li.cb=false
+    son = (e) => {
+        var list = this.state.son_arr
+        for (var li of list) {
+            li.cb = false
         }
-        if(e){
-            var change=true
-            list[0].cb=true
-        }else{
-            var change=false
-            list[1].cb=true
+        if (e) {
+            var change = true
+            list[0].cb = true
+        } else {
+            var change = false
+            list[1].cb = true
         }
-        this.setState({son:change,son_arr:list})
-        console.log(list)
+        this.setState({ son: change, son_arr: list })
     }
     render() {
         return (<div>
@@ -414,7 +432,7 @@ class Detail extends React.Component {
                         <span>买房问大家</span>
                     </div>
                     <div className="map_all">
-                        <div className="map"></div>
+                        <div className="map" id="map"></div>
                         <div className="abs">
                             <div className="icon"></div>
                             <div className="text">
@@ -424,19 +442,19 @@ class Detail extends React.Component {
                         </div>
                     </div>
                     <div className="sunds">
-                            {
-                                this.state.mating.map((value,key)=>{
-                                    return (<div className="event" key={key}><img src={this.state.domain+value.img}></img>
+                        {
+                            this.state.mating.map((value, key) => {
+                                return (<div className="event" key={key}><img src={this.state.domain + value.img}></img>
                                     <span>{value.text}</span></div>)
-                                })
-                            }
+                            })
+                        }
                     </div>
                 </div>
             </div>
             <div className="detail_real">
                 <div className="pad">
                     <div className="left">
-                        <img src={this.state.domain+"/public/static/phone/img/peitao.jpg"}></img>
+                        <img src={this.state.domain + "/public/static/phone/img/peitao.jpg"}></img>
                         <div className="right">
                             <p>区域配套</p>
                             <span>获取学区购物等配套信息</span>
@@ -453,23 +471,19 @@ class Detail extends React.Component {
                     {this.state.son}
                     <div className="nav">
                         {
-                            this.state.son_arr.map((value,key)=>{
-                                
-                                if(key==0){
-                                    console.log(0)
-                                    return (<div key={key} className={value.cb?"active first":"first"} onClick={()=>{this.son(true)}}>{value.text}</div>)
-                                }else{
-                                    console.log(1)
-                                    return (<div key={key} onClick={()=>{this.son(false)}} className={value.cb?"active":""}>{value.text}</div>)
+                            this.state.son_arr.map((value, key) => {
+                                if (key == 0) {
+                                    return (<div key={key} className={value.cb ? "active first" : "first"} onClick={() => { this.son(true) }}>{value.text}</div>)
+                                } else {
+                                    return (<div key={key} onClick={() => { this.son(false) }} className={value.cb ? "active" : ""}>{value.text}</div>)
                                 }
-                                
                             })
                         }
                     </div>
                     <House change={this.state.son}></House>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>)
     }
 }
