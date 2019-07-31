@@ -35,24 +35,9 @@ class Detail extends React.Component {
         var map = new BMap.Map("map");
         var point = new BMap.Point(109.507708,18.266495);
         map.centerAndZoom(point, 15);
-        
         var infor=new BMap.InfoWindow("怡海湾别墅")
-        map.openInfoWindow(infor,map.getCenter())
-        // var opts = {    
-        //     width : 80,     // 信息窗口宽度    
-        //     height: 60,     // 信息窗口高度    
-        //     title : "Hello"  // 信息窗口标题   
-        // }    
-        // var infoWindow = new BMap.InfoWindow("World", opts);  // 创建信息窗口对象    
-        // map.openInfoWindow(infoWindow, map.getCenter());
-        
-        
-        
+        map.openInfoWindow(infor,map.getCenter())   
     }
-    // shouldComponentUpdate(nextprops, nextstate) {
-
-    //     return true
-    // }
     fold = () => {
         if (this.state.fold == "10rem") {
             var num = ""
