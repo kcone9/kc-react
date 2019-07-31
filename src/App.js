@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
-import routes from "./routes"
+import routers from "./routes"
 import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -9,11 +10,11 @@ class App extends React.Component {
   render() {
     return (<Router><div>
       {
-        routes.map((route,key)=>{
+        routers.map((route,key)=>{
           if(route.exact){
-            return (<Route key={key} exact path={route.path} component={route.component}></Route>)
+            return (<Route key={key} exact path={route.path} component={route.component} ></Route>)
           }else{
-            return (<Route key={key} path={route.path} component={route.component}></Route>)
+            return (<Route key={key} path={route.path} component={route.component} ></Route>)
           }
         })
       }

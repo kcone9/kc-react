@@ -32,3 +32,107 @@
         font-size:0.9rem;
     }
 }
+.inde,.three,.house_scroll{
+    width:100%;
+    // padding-left:0.3rem;
+    & .indes{
+        padding:0.8rem 0rem;
+        border-bottom:2px solid #f4f4f4;
+    }
+    .top{
+        width:100%;
+        height:6rem;
+        padding:0 0.6rem;
+        display:flex;
+        align-items:center;
+        // border:1px solid red;
+        img{
+            width:6.8rem;
+            height:5.2rem;
+        }
+        .info{
+            width:50%;
+            height:5.2rem;
+            margin-left:0.6rem;
+            display:flex;
+            flex-direction:column;
+            // border:1px solid red;
+            .title{
+                font-size:0.9rem;
+                font-weight:700;
+            }
+            .price{
+                color:#fe0000;
+                font-size:1rem;
+            }
+            .address{
+                font-size:0.7rem;
+                margin-top:0.1rem;
+                color:#a2a2a2;
+            }
+            .room{
+                font-size:0.8rem;
+                margin-top:0.2rem;
+                color:#a2a2a2;
+            }
+        }
+        .call{
+            // border:1px solid red;
+            margin-left:0.3rem;
+            img{
+                width:5.3rem;
+                height:4.17rem;
+            }
+        }
+    }
+    .mid{
+        width:100%;
+        display:flex;
+        align-items:center;
+        height:2rem;
+        padding:0 0.6rem;
+        // border:1px solid red;
+        .infor{
+            // width:5.2rem;
+            margin-right:0.3rem;
+            span{
+                font-size:0.4rem;
+                white-space:nowrap;
+                
+            }
+        }
+        .dis{
+            font-size:0.7rem;
+            margin-right:0.3rem;
+            padding:0 0.2rem;
+            border:1px solid #a2a2a2;
+            border-radius:5px;
+            color:#a2a2a2;
+        }
+    }
+    .bottom{
+        width:100%;
+        $height:2.3rem;
+        padding:0 0.6rem;
+        & .bottoms{
+            height:$height;
+            background-color:#f4f4f4;
+            display:flex;
+            align-items:center;
+            padding:0 0.4rem;
+        }
+        .discount{
+            color:#fff;
+            width:1.5rem;
+            height:1.5rem;
+            font-size:0.7rem;
+            margin-right:0.4rem;
+            padding:0.2rem 0.3rem;
+            @extend %flex;
+            background-color:#f93824;
+        }
+        span{
+            font-size:0.8rem;
+        }
+    }
+}
