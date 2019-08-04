@@ -5,6 +5,7 @@ import Main from "./son/info_house/Main"
 import Mating from "./son/info_house/Mating"
 import Type from "./son/info_house/Type"
 import Answer from "./son/info_house/Answer"
+import Footer from "./son/Footer"
 class Info extends React.Component {
     constructor(props){
         super(props)
@@ -20,15 +21,16 @@ class Info extends React.Component {
                 <img src="http://127.0.0.1:5050/house/icon/arr_aside_gray.png"></img>
             </div>
             <div className="info_nav">
-                <div>楼盘主页</div>
-                <div>户型详情</div>
-                <div>周边配套</div>
-                <div>楼盘问答</div>
+                <div><Link to="/info/">楼盘主页</Link></div>
+                <div><Link to="/info/type">户型详情</Link></div>
+                <div><Link to="/info/mating">周边配套</Link></div>
+                <div><Link to="/info/answer">楼盘问答</Link></div>
             </div>
             <Route exact path="/info/" component={Main}></Route>
             <Route path="/info/type" component={Type}></Route>
             <Route path="/info/mating" component={Mating}></Route>
             <Route path="/info/answer" component={Answer}></Route>
+            <Footer></Footer>
         </div>)
     }
 }
