@@ -2,11 +2,12 @@ import React, { Component } from "react"
 import "../scss/detail.scss"
 import House from "./son/House_son"
 import Footer from "./son/Footer"
+import {Redirect} from "react-router-dom"
 class Detail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            nav: ["主页", "详情", "户型", "配套", "问答"], fold: "10rem", fold_text: "查看更多",
+            nav: [{text:"主页",to:"/detail"},{text:"详情",to:"/info/"},{text:"户型",to:"/info/type"}, {text:"配套",to:"/info/mating"}, {text:"问答",to:"/info/answer"}], fold: "10rem", fold_text: "查看更多",
             domain: "http://cdn.lou86.com",
             mating: [{ img: "/public/static/phone/img/icons/ico_44.png", text: "学校" },
             { img: "/public/static/phone/img/icons/ico_45.png", text: "医院" },
@@ -15,28 +16,28 @@ class Detail extends React.Component {
             { img: "/public/static/phone/img/icons/ico_48.png", text: "娱乐" },
             { img: "/public/static/phone/img/icons/ico_49.png", text: "娱乐" },
             { img: "/public/static/phone/img/icons/ico_50.png", text: "银行" }],
-            son: false, son_arr: [{ text: "推荐楼盘", cb: true }, { text: "热销楼盘", cb: false }]
+            son: false, son_arr: [{ text: "推荐楼盘", cb: true }, { text: "热销楼盘", cb: false }],
+            jump:false,jump_from:""
         }
     }
     componentWillMount() {
         var list = this.state.nav
-        var row = []
         for (var i = 0; i < list.length; i++) {
             if (i === 0) {
-                row.push({ text: list[i], cb: true })
+                list[i].cb=true
             } else {
-                row.push({ text: list[i], cb: false })
+                list[i].cb=false
             }
         }
-        this.setState({ nav: row })
+        this.setState({ nav: list })
     }
     componentDidMount() {
         var BMap=window.BMap
         var map = new BMap.Map("map");
         var point = new BMap.Point(109.507708,18.266495);
         map.centerAndZoom(point, 15);
-        var infor=new BMap.InfoWindow("怡海湾别墅")
-        map.openInfoWindow(infor,map.getCenter())   
+        var marker=new BMap.Marker(point);
+        map.addOverlay(marker) 
     }
     fold = () => {
         if (this.state.fold == "10rem") {
@@ -62,7 +63,26 @@ class Detail extends React.Component {
         }
         this.setState({ son: change, son_arr: list })
     }
+    jump_info=function(e){
+        var list=this.state.nav
+        for(var li of list){
+            li.cb=false
+        }
+        list[e].cb=true
+        
+        if(e!==0){
+            var jump=true
+            var jump_from=list[e].to
+        }else{
+            var jump=false
+            var jump_from=list[e].to
+        }
+        this.setState({nav:list,jump:jump,jump_from:jump_from})
+    }
     render() {
+        if(this.state.jump){
+            return <Redirect to={this.state.jump_from}/>
+        }
         return (<div>
             <div className="detail_header">
                 <div className="back">
@@ -78,7 +98,7 @@ class Detail extends React.Component {
             <div className="detail_nav">
                 {
                     this.state.nav.map((value, key) => {
-                        return (<button key={key} className={value.cb ? "active" : ""}>{value.text}</button>)
+                        return (<button key={key} className={value.cb ? "active" : ""} onClick={this.jump_info.bind(this,key)}>{value.text}</button>)
                     })
                 }
             </div>

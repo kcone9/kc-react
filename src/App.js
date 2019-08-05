@@ -12,9 +12,9 @@ class App extends React.Component {
       {
         routers.map((route,key)=>{
           if(route.exact){
-            return (<Route key={key} exact path={route.path} component={route.component} ></Route>)
+            return (<Route key={key} exact path={route.path}  render={props=>(<route.component {...props} routes={route.routes}/>)}/>)
           }else{
-            return (<Route key={key} path={route.path} component={route.component} ></Route>)
+            return (<Route key={key} path={route.path}  render={props=>(<route.component {...props} routes={route.routes}/>)}/>)
           }
         })
       }

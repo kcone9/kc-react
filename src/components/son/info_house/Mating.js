@@ -1,16 +1,19 @@
 import React, { Component } from "react"
+import icon from "../../../image/map.png"
 class Mating extends React.Component {
     constructor(props) {
         super(props)
     }
     componentDidMount(){
+        console.log(icon)
         var BMap=window.BMap
         var map = new BMap.Map("map");
         var point = new BMap.Point(109.507708,18.266495);
         map.centerAndZoom(point, 15);
-        var infor=new BMap.InfoWindow("怡海湾别墅")
-        map.openInfoWindow(infor,map.getCenter())   
-    }
+        var marker=new BMap.Marker(point);
+        map.addOverlay(marker)
+    } 
+    
     render() {
         return (<div className="info_mating">
             <div className="mating_map">
