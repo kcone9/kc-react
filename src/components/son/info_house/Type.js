@@ -16,26 +16,13 @@ class Type extends React.Component {
                 text: "四居室", cb: false, content: [{ img: "http://cdn.lou86.com/public/uploads/20190417/ef704a465c49f17c0ff57f87cf392064.jpg", type: "别墅", name: "2室1厅1卫1厨", area: "80m²", mold: "C户型下叠", price: "约270万/套" },
                 { img: "http://cdn.lou86.com/public/uploads/20190417/ef704a465c49f17c0ff57f87cf392064.jpg", type: "别墅", name: "2室1厅1卫1厨", area: "80m²", mold: "C户型下叠", price: "约270万/套" }]
             }],
-            navall: []
+            nav_content: [],nav_all:[]
         }
     }
     componentWillMount() {
         var list = this.state.nav
         list[0].cb = true
-        this.setState({ nav: list })
-        this.navall()
-    }
-    navall = () => {
-        var list = this.state.nav
-        var all = []
-        for (var i = 0; i < list.length; i++) {
-            all.push({ title: list[i].text, content: list[i].content })
-        }
-        // for(var li of list){
-        //     all.content=list[0].content.concat(li.content)
-        // }
-        this.setState({ nav: list, navall: all })
-        console.log(this.state.navall)
+        this.setState({ nav: list ,nav_all:list})
     }
     navbtn = function (e) {
         var list = this.state.nav;
@@ -43,10 +30,14 @@ class Type extends React.Component {
             li.cb = false
         }
         list[e].cb = true
-        this.setState({ nav: list })
+        if(e===0){
+            list=list
+        }else{
+            list=[list[e]]
+        }
+        this.setState({ nav_all: list })
     }
     render() {
-
         return (<div className="info_type">
             <div className="nav">
                 {
@@ -56,8 +47,8 @@ class Type extends React.Component {
                 }
             </div>
             {
-                this.state.nav.map((value, key) => {
-                    return (<div className={key === 0 ? "room_active" : "room"} key={key} >
+                this.state.nav_all.map((value, key) => {
+                    return (<div className="room" key={key} >
                         <div className="title">{value.text}</div>
                         {
                             value.content.map((values, keys) => {
@@ -72,15 +63,6 @@ class Type extends React.Component {
                     </div>)
                 })
             }
-            {/* <div className="room">
-                <div className="title"></div>
-                <div className="container">
-                    <div className="img"></div>
-                    <div className="part"><p></p><span></span></div>
-                    <div className="part"><p></p><span></span></div>
-                    <div className="price"></div>
-                </div>
-            </div> */}
         </div>)
     }
 }

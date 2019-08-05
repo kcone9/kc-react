@@ -13,9 +13,12 @@ class Info extends React.Component {
             domain:"http://cdn.lou86.com"
         }
     }
+    back=()=>{
+        this.props.history.go(-1)
+    }
     render(){
         return (<div className="Info_main">
-            <div className="info_header">
+            <div className="info_header" onClick={this.back}>
                 <img src="http://127.0.0.1:5050/house/icon/arr_left_gary.png"></img>
                 <span>楼盘详情</span>
                 <img src="http://127.0.0.1:5050/house/icon/arr_aside_gray.png"></img>

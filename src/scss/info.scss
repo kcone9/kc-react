@@ -3,18 +3,22 @@
     justify-content:center;
     align-items:center;
 }
-.info_main{
-    padding-top:0.6rem;
+.Info_main{
+    padding-top:2.4rem;
 }
 .info_header{
     width:100%;
     height:2.4rem;
-    // border:1px solid red;
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:3;
     display:flex;
     justify-content:space-between;
     align-items:center;
     padding:0 0.6rem;
     border-bottom:1px solid #d9d9d9;
+    background-color:#fff;
     span{
         font-size:0.9rem;
     }
@@ -166,7 +170,169 @@
             }
         }
     }
-    .room_active{
-        display:none;
+}
+.info_mating{
+    width:100%;
+    padding:0.3rem 0.4rem;
+    background-color:#f3f2f2;
+    .mating_map{
+        width:100%;
+        height:19rem;
+        background-color:#fff;
+        border-radius:4px;
+        padding: 0.3rem 0.3rem;
+        .title{
+            font-size:1rem;
+            font-weight:700;
+            // border:1px solid red;
+            padding:0.3rem 0;
+        }
+        .map{
+            // margin-top:0.3rem;
+            width:100%;
+            height:16.5rem;
+            // border:1px solid red;
+            border-radius:4px;
+        }
+    }
+    .mating_info{
+        width:100%;
+        background-color:#fff;
+        border-radius:4px;
+        padding: 0.3rem 0.3rem;
+        margin: 0.4rem 0;
+        .title{
+            font-size:1rem;
+            font-weight:700;
+            // border:1px solid red;
+            padding:0.3rem 0;
+        }
+        .item{
+            width:100%;
+            font-size:0.9rem;
+            padding:0.3rem 0;
+        }
+    }
+    .mating_traffic{
+        width:100%;
+        // height:19rem;
+        background-color:#fff;
+        margin: 0.4rem 0;
+        border-radius:4px;
+        padding: 0.3rem 0.3rem;
+        .title{
+            font-size:1rem;
+            font-weight:700;
+            // border:1px solid red;
+            padding:0.3rem 0;
+        }
+        .item{
+            width:100%;
+            font-size:0.9rem;
+            padding:0.3rem 0;
+        }
     }
 }
+.info_answer{
+    width:100%;
+    padding:0.3rem 0.4rem;
+    background-color:#f3f2f2;
+    .answer_init{
+        width:100%;
+        background-color:#fff;
+        border-radius:4px;
+        padding: 0.3rem 0.3rem;
+        margin: 0.4rem 0;
+        @extend %flex;
+        flex-direction:column;
+        .title{
+            font-size:1rem;
+            font-weight:700;
+            // border:1px solid red;
+            padding:0.3rem 0;
+            padding-bottom:0.6rem;
+        }
+        .answer{
+            width:100%;
+            height:6rem;
+            font-size:1.1rem;
+            padding:0.3rem 0.2rem;
+            border-radius:4px;
+            // color:
+        }
+        .phone{
+            text-align:center;
+            border:1px solid #ddd;
+            background-color:#f4f4f4
+        }
+        .phone,button{
+            width:60%;
+            height:2.4rem;
+            margin:0.3rem 0;
+            border-radius:4px;
+            border-style:none;
+        }
+        button{
+            color:#fff;
+            background-color:#4da635;
+        }
+    }
+    .answer_reply{
+        width:100%;
+        background-color:#fff;
+        border-radius:4px;
+        padding: 0.3rem 0.3rem;
+        // border:1px solid red;
+        .title{
+            font-size:1rem;
+            font-weight:700;
+            // border:1px solid red;
+            padding:0.3rem 0;
+            padding-bottom:0.6rem;
+        }
+        .reply{
+            display:flex;
+            .left{
+                width:20%;
+                // border:1px solid red;
+                display:flex;
+                justify-content:center;
+                padding-top:0.3rem;
+                img{
+                    width:2.4rem;
+                    height:2.4rem;
+                }
+            }
+            .right{
+                width:80%;
+                // border:1px solid red;
+                .ident{
+                    color:#bbb;
+                    font-size:0.9rem;
+                }
+                .title_answer{
+                    color:#666;
+                    font-size:0.9rem;
+                }
+                .time{
+                    color:#bbb;
+                }
+                .content{
+                    border:1px solid #eee;
+                    border-radius:4px;
+                    font-size:0.9rem;
+                    padding:0.3rem 0.3rem;
+                    .first{
+                        color:#999;
+                        display:block;
+                    }
+                    .text{
+                        color:#999;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
