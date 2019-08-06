@@ -3,6 +3,7 @@ import "../scss/house.scss"
 import "../css/swiper.min.css"
 import Swiper from "swiper"
 import axios from "axios"
+import Roll from "./son/Dynamic_roll"
 class House extends React.Component {
     constructor(props) {
         super(props)
@@ -12,7 +13,7 @@ class House extends React.Component {
             { img: "/public/static/phone/img/icons/nav_2.png", title: "活动专区" },
             { img: "/public/static/phone/img/icons/nav_3.png", title: "航怕看房" },
             { img: "/public/static/phone/img/icons/nav_4.png", title: "特价房" }],
-            roll: [], top: 0, topnum: 0, toptrans: "all 5s", swiper: [], swipers: true,
+             swiper: [], swipers: true,
             select: [{ title: "区域" }, { title: "价格" }, { title: "户型" }, { title: "更多" }],
             pile: [], pileall: null, pilemore: false, pileclose: 4, piledis: "flex", house: [], adv: [],
             hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true
@@ -39,9 +40,6 @@ class House extends React.Component {
             })
         }
         this.setState({ house: house })
-        axios.get("http://127.0.0.1:5050/details/house_data?label=house_news").then(res => {
-            this.setState({ roll: res.data.reg })
-        })
         axios.get("http://127.0.0.1:5050/details/house_data?label=house_swiper").then(res => {
             this.setState({ swiper: res.data.reg })
         })
@@ -56,7 +54,6 @@ class House extends React.Component {
         })
     }
     componentDidMount(option) {
-        this.margin()
         this.lazy()
         var that = this
         var inter = new IntersectionObserver(
@@ -85,7 +82,6 @@ class House extends React.Component {
             }
 
         }
-        // console.log("dom变化")
     }
     btn_select = (e) => {
         var list = this.state.select
@@ -117,26 +113,6 @@ class House extends React.Component {
             var more = false
         }
         this.setState({ select: list, pile: num, pilemore: more, pileclose: n, piledis: display })
-    }
-    margin() {
-        setInterval(() => {
-            var n = this.state.roll.length
-            var topnum = this.state.topnum
-            if (topnum == 0) {
-                var top = -1 * 2.8
-                topnum = topnum + 1
-                this.setState({ toptrans: "all 2s" })
-            } else if (topnum < n - 1) {
-                topnum = topnum + 1
-                var top = -(topnum) * 2.8
-            } else if (topnum == n - 1) {
-                var top = 0
-                topnum = 0
-                this.setState({ toptrans: "none" })
-            }
-            this.setState({ top: top, topnum: topnum })
-        }, 5000)
-
     }
     house_scroll() {
         // var that=this
@@ -221,20 +197,7 @@ class House extends React.Component {
                         </div>)
                     })}
                 </div>
-                <div className="cher">
-                    <div><img src="http://m.lou86.com/public/static/phone/image/icons/libs.png"></img>
-                        <img src="http://m.lou86.com/public/static/phone/image/icons/libs-lp.png"></img></div>
-                    <div className="walk">
-                        <ul style={{ marginTop: this.state.top + "rem", transition: this.state.toptrans }}>
-                            {
-                                this.state.roll.map((value, key) => {
-                                    return (<li key={key}>{value}</li>)
-                                })
-                            }
-                        </ul>
-                    </div>
-                    <button>提醒动态</button>
-                </div>
+                <Roll></Roll>
             </div>
             <div className="hr"></div>
             <div className="select">

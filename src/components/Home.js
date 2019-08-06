@@ -5,29 +5,21 @@ import Swiper from "swiper"
 import axios from "axios"
 import loadimg from "../image/loading.gif"
 import Footer from "./son/Footer"
-import { Link } from "react-router-dom"
-import { push_uniq } from "terser";
+import { Link ,Redirect} from "react-router-dom"
+import Roll from "./son/Dynamic_roll"
 class Home extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             nav: [],
             navtwo: [],
-            news: [{ title: "海口市郊列车开通运行 雅居乐金沙湾业主们出行更加便利了", mar: 0 },
-            { title: "融创精彩天地灵动百变户型尽显归家礼仪 2019年12月31日交房", mar: 0 },
-            { title: "融创无忌海交通区位发展优越 均价14000元/平", mar: 0 },
-            { title: "富力悦海湾别墅全系度假配套打造 全款94折分期96折", mar: 0 },
-            { title: "融创观澜湖公园壹号内部打造了3万㎡园林景观", mar: 0 }],
-            newmargin: 0,
-            newtransition: "all 1s",
-            newsnum: 0,
             activity: [{ title: "http://cdn.lou86.com/public/uploads/slider/20190721/a40f7f82e27a9d8850c4781c385b14fd.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/20190405/6b4efa6c6f9add610303bfb927d7b0fc.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190514/e2971599a706b6fc0cc70188ef77c446.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190509/c38b63ec6f6fcd5165aa640a75caf076.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190601/1d47ae6b9affb0f2a652ec904cadc741.jpg" }],
             acttop: [], actbottom: [], rec: [], find: ["6千以下", "6-7千", "7-8千", "8千-1万", "1万-1.3万", "1.3-1.5万", "1.5-2万", "2万以上"],
-            find_type: [],
+            find_type: [],jump:false,
             imgnum: 0,
             dataswitch: false
         }
@@ -68,39 +60,12 @@ class Home extends React.Component {
                 delay: 5000
             }
         })
-        this.autonews()
     }
     componentDidUpdate() {
         this.lazy()
     }
     componentWillUnmount() {
         this.setState = () => { }
-    }
-    autonews = () => {
-        setInterval(() => {
-            var num = this.state.newmargin
-            var times = this.state.newsnum
-            var list = this.state.news
-            if (num == 0) {
-                num = -2.2
-                times = 0
-                var transition = "all 1s"
-            } else {
-                num = -2.2 * (times + 1)
-                times = times + 1
-            }
-            if (times == list.length) {
-                num = 0
-                times = 0
-                var transition = "none"
-            }
-            this.setState({
-                newsnum: times,
-                newmargin: num,
-                newtransition: transition,
-                news: list
-            })
-        }, 6000)
     }
     lazy = (e) => {
         var that = this
@@ -139,11 +104,15 @@ class Home extends React.Component {
             var num = Math.floor(Math.random() * color.length)
             row.push({color:color[num],text:list[i]})
         }
-        console.log(row)
         this.setState({find_type:row})
     }
+    back=()=>{
+        this.setState({jump:true})
+    }
     render() {
-
+        if(this.state.jump){
+            return <Redirect to="/search"/>
+        }
         return (<div>
             <div className="home_header">
                 <div className="h3">
@@ -151,7 +120,7 @@ class Home extends React.Component {
                 </div>
                 <div className="input">
                     <div className="search">
-                        <div className="left">
+                        <div className="left" onClick={this.back}>
                             <span>海口</span><img src="http://127.0.0.1:5050/house/icon/arr_down.png"></img>
                             <div className="int"></div>
                         </div>
@@ -188,19 +157,7 @@ class Home extends React.Component {
                     <div className="swiper-pagination"></div>
                 </div>
             </div>
-            <div className="news">
-                <img src="http://m.lou86.com/public/static/phone/image/lou86t_07.png"></img>
-                <div className="content">
-                    <ul className="container" id="myul" style={{ marginTop: this.state.newmargin + "rem", transition: this.state.newtransition }}>
-                        {
-                            this.state.news.map((value, key) => {
-                                return <li key={key}><span style={{ marginLeft: value.mar + "px" }}>{value.title}</span></li>
-                            })
-                        }
-                    </ul>
-                </div>
-                <button>动态提醒</button>
-            </div>
+            <Roll></Roll>
             <div className="activity">
                 <div className="title">
                     <span>热门活动</span>
