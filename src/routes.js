@@ -9,7 +9,7 @@ import Mating from "./components/son/info_house/Mating"
 import Answer from "./components/son/info_house/Answer"
 import Search from "./components/Search"
 import Bighouse from "./components/Bighouse"
-
+import Article from "./components/Article"
 let routers =[
     {path:"/", exact:true, component:Home},
     {path:"/house",component:House},
@@ -23,6 +23,7 @@ let routers =[
         {path:"/info/answer",component:Answer}
     ]},
     {path:"/search",component:Search},
-    {path:"/bighouse",component:Bighouse}
+    {path:"/bighouse",component:Bighouse},
+    {path:"/article",component:Article}
 ]
 export default routers;

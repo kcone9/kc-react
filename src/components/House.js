@@ -16,7 +16,7 @@ class House extends React.Component {
              swiper: [], swipers: true,
             select: [{ title: "区域" }, { title: "价格" }, { title: "户型" }, { title: "更多" }],
             pile: [], pileall: null, pilemore: false, pileclose: 4, piledis: "flex", house: [], adv: [],
-            hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true
+            hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true,scroll_top:0
         }
     }
     componentWillMount() {
@@ -46,15 +46,13 @@ class House extends React.Component {
         axios.get("http://127.0.0.1:5050/details/house_data?label=select").then(res => {
             this.setState({ pile: res.data.area, pileall: res.data })
         })
-        axios.get("http://127.0.0.1:5050/details/house_data?label=adv").then(res => {
-            this.setState({ adv: res.data.reg })
-        })
+        
         axios.get("http://127.0.0.1:5050/details/house_data?label=house_hot").then(res => {
             this.setState({ hot: res.data.reg })
         })
     }
     componentDidMount(option) {
-        this.lazy()
+        // this.lazy()
         var that = this
         var inter = new IntersectionObserver(
             function (element) {
@@ -64,6 +62,10 @@ class House extends React.Component {
             }
         )
         inter.observe(document.querySelector(".scrollfooter"))
+        axios.get("http://127.0.0.1:5050/details/house_data?label=adv").then(res => {
+            this.setState({ adv: res.data.reg })
+        })
+        this.scroll_exce()
     }
     componentDidUpdate() {
         if (this.state.swiper.length > 0) {
@@ -82,6 +84,7 @@ class House extends React.Component {
             }
 
         }
+        
     }
     btn_select = (e) => {
         var list = this.state.select
@@ -151,6 +154,20 @@ class House extends React.Component {
         }
         addelement()
     }
+    scroll_exce(){
+        
+        var exce=new IntersectionObserver((ex)=>{
+            if(ex[0].isIntersecting){
+                var num=0
+            }else{
+                var num=1
+            }
+            // console.log(ex[0].isVisible,ex[0].isIntersecting)
+            this.setState({scroll_top:num})
+        })
+        exce.observe(this.refs.exce)
+        // console.log(this.refs.exce)
+    }
     render() {
         return (<div className="house_main">
             <div className="house_footer">
@@ -170,14 +187,14 @@ class House extends React.Component {
                     </button>
                 </div>
             </div>
-            <div className="house_input">
+            <div className="house_input" name="top" ref="exce">
                 <div className="content">
                     <input></input>
                     <img src="http://127.0.0.1:5050/house/icon/search.png"></img>
                 </div>
             </div>
             <div className="hydrid">
-                <div className="infinite">
+                <div className="infinite" >
                     <div className="swiper-container" >
                         <div className="swiper-wrapper">
                             {
@@ -231,7 +248,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.load} data-src={value.img} data-id={key}></img>
+                                <img src={value.img} data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -288,7 +305,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.load} data-src={value.img} data-id={key}></img>
+                                <img src={value.img} data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -342,7 +359,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.load} data-src={value.img} data-id={key}></img>
+                                <img src={value.img} data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -389,7 +406,7 @@ class House extends React.Component {
                     this.state.scroll.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.load} data-src={value.img} data-id={key}></img>
+                                <img src={value.img} data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -418,6 +435,9 @@ class House extends React.Component {
                     })
                 }
             </div>
+            <a className="house_top" onClick={this.scroll_top} href="#top" style={{opacity:this.state.scroll_top}}>
+                <img src="http://cdn.lou86.com/public/static/phone/image/icons/new-top.png"></img>
+            </a>
             <div className="scrollfooter" style={{ display: this.state.scroll_close }}>
                 <div className="con">
                     <div className="loader"></div><span>正在加载</span>

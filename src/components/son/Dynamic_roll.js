@@ -51,9 +51,6 @@ class Dynamic_roll extends React.Component {
                     </div>
                     <button>提醒动态</button>
                 </div>
-                <div className="header">
-                    
-                </div>
         </div>)
     }
 }

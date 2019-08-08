@@ -55,18 +55,456 @@
     }
 }
 .bighouse_total{
+    // overflow-y:hidden;
     .header{
         width:100%;
         height:2.6rem;
-        border:1px solid red;
+        // border:1px solid red;
         display:flex;
         align-items:center;
-        justify-content:space-around;
+        justify-content:space-between;
+        padding:0 0.6rem;
         img{
             width: 1.4rem;
             height: 1.4rem;
         }
     }
-}
+    .search{
+        width:100%;
+        padding:0.6rem 0.6rem;
+        background-color:#f2f2f2;
+        .pad{
+            display:flex;
+            width:100%;
+            background-color:#fff;
+            height:2.6rem;
+            align-items:center;
+            input{
+                width:90%;
+                height:2.6rem;
+                // border:1px solid red;
+                padding-left:0.6rem;
+                border-style:none;
+                outline-style:none;
+            }
+            .right{
+                width:10%;
+                height:2.6rem;
+                display:flex;
+                align-items:center;
+                // border:1px solid red;
+                justify-content:flex-end;
+                padding-right:0.6rem;
+                span{
+                    widows: 1px;
+                    height:1.4rem;
+                    border-left:1px solid #62ab00;
+                }
+                img{
+                    margin-left:0.4rem;
+                    width:1.4rem;
+                    height:1.4rem;
+                }
+            }
+        }
+    }
+    .nav_down{
+        width:100%;
+        display:flex;
+        border-top:1px solid  rgb(229, 229, 229);
+        border-bottom:1px solid  rgb(229, 229, 229);
+        // border-bottom:1px solid red;
+        div{
+            width:25%;
+            height:2.5rem;
+            // display:flex;
+            // align-items:center;
+            @extend %flex;
+            span{
+                font-size:0.9rem;
+            }
+            img{
+                margin-left:0.2rem;
+                width:1rem;
+                height:1rem;
+                transition:all 0.4s;
+            }
+            .img_act{
+                // background-color:#4da635;
+                transform:rotate(180deg);
+            }
+        }
+        .font_act{
+            color:#4da635;
+            border-bottom:1px solid #4da635;
+        }
+        
+    }
+    .rise{
+        width:100%;
+        position:fixed;
+        border:1px solid #e3e3e3;
+        z-index:10;
+        bottom:0;
+        left:0;
+        padding-bottom:1rem;
+        background-color:#fff;
+        .close{
+            width:100%;
+            height:1.5rem;
+            // border:1px solid red;
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            padding-top:0.6rem;
+            padding-right:0.6rem;
+            img{
+                width:1.5rem;
+                height:1.5rem;
+            }
+        }
+        .item{
+            padding:0.1rem 0;
+            @extend %flex;
+            span{
+                font-size:0.9rem;
+            }
+        }
+        .more{
+            width:100%;
+            .title{
+                width:100%;
+                padding-left:0.4rem;
+                font-size:0.9rem;
+            }
+            .content{
+                width:100%;
+                display:flex;
+                flex-wrap:wrap;
+                // border:1px solid red;
+                padding:0 0.2rem;
+                padding-bottom:0.4rem;
+                .son{
+                    width:23%;
+                    height:2rem;
+                    font-size:0.7rem;
+                    @extend %flex;
+                    border:1px solid #deddde;
+                    margin-right:0.4rem;
+                    margin-top:0.4rem;
+                    
+                }
+            }
+        }
+        .bottom{
+            display:flex;
+            justify-content:center;
+            margin-top:0.4rem;
+            button{
+                width:35%;
+                height:2rem;
+                border-style:none;
+                color:#fff;
+                outline:none;
+                border-radius:4px;
+            }
+            .last{
+                margin-left:0.6rem;
+                background-color:#4b9e36;
+            }
+            .first{
+                background-color:#f96369;
+            }
+        }
+    }
+    .bighouse_list{
+        width:100%;
+        list-style:none;
+        padding:0.6rem 0.4rem;
+        padding-bottom:0;
+        li{
+            width:100%;
+            margin:0.4rem 0;
+            .list_main{
+                width:100%;
+                $height:13rem;
+                // border:1px solid red;
+                line-height:0;
+                position:relative;
+                
+                img{
+                    width:100%;
+                    height:$height;
+                }
+                .abs{
+                    position:absolute;
+                    left:-0.5rem;
+                    top:-1.18rem;
+                    z-index:3;
+                    width:5.6rem;
+                    height:3.2rem;
+                    // border:1px solid red;
+                    background-image:url(http://cdn.lou86.com/public/static/phone/image/icons/ico-status-hot.png);
+                    background-repeat:round;
+                    @extend %flex;
+                    span{
+                        color:#fff;
+                    }
+                }
+                .outer{
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    z-index:1;
+                    width:100%;
+                    height:$height;
+                    @extend %flex;
+                    img{
+                        width:2.8rem;
+                        height:2.8rem;
+                    }
+                }
+                .active{
+                    display:none;
+                }
+                .inter{
+                    position:absolute;
+                    bottom:0;
+                    left:0;
+                    z-index:2;
+                    width:100%;
+                    height:4rem;
+                    // border:1px solid red;
+                    color:#fff;
+                    background-color:rgba(0,0,0,0.4);
+                    .inter_top,.inter_bottom{
+                        padding:0 0.4rem;
+                        font-size:0.9rem;
+                    }
+                    .inter_top{
+                        // border:1px solid red;
+                        width:100%;
+                        display:flex;
+                        justify-content:space-between;
+                        align-items:center;
+                        height:50%;
+                        
+                        .right{
+                            color:#f07c69;
+                            font-weight:600;
 
+                        }
+                    }
+                    .inter_bottom{
+                        // border:1px solid red;
+                        height:50%;
+                        width:100%;
+                        display:flex;
+                        align-items:center;
+                    }
+                }
+            }
+            .bottom{
+                width:100%;
+                height:3.2rem;
+                // border:1px solid red;
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                .left{
+                    display:flex;
+                    align-items:center;
+                    img{
+                        width:1.2rem;
+                        height:1.2rem;
+                        margin-right:0.6rem;
+                    }
+                    span{
+                        font-size:0.8rem;
+                    }
+                }
+                button{
+                    width:6rem;
+                    height:1.8rem;
+                    border:1px #f07c69 solid;
+                    color:#f07c69;
+                    background-color:transparent;
+                }
+            }
+        }
+    }
+    .bighouse_loading{
+        background-color:#f2f2f2;
+        width:100%;
+        height:2.4rem;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:hidden;
+        span{
+            color:#f8846d
+        }
+        .loader{
+            width:1.8rem;
+            height:1.8rem;
+            border:1px solid red;
+            // margin: 6em 0;
+            // margin-right:0.4rem;
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 0.4em solid #f8846d;
+            border-right: 0.4em solid #f8846d;
+            border-bottom: 0.4em solid #f8846d;
+            border-left: 0.4em solid #fff;
+            -webkit-animation: load8 2s infinite linear;
+            animation: load8 1.5s infinite linear;
+            &:after{
+                border-radius: 50%;
+                width: 3rem;
+                height: 3rem;
+            }
+            @-webkit-keyframes load8 {
+                0% {
+                  -webkit-transform: rotate(0deg);
+                  transform: rotate(0deg);
+                }
+                100% {
+                  -webkit-transform: rotate(360deg);
+                  transform: rotate(360deg);
+                }
+              }
+              @keyframes load8 {
+                0% {
+                  -webkit-transform: rotate(0deg);
+                  transform: rotate(0deg);
+                }
+                100% {
+                  -webkit-transform: rotate(360deg);
+                  transform: rotate(360deg);
+                }
+              }
+        }
+    }
+}
+.article_total{
+    width:100%;
+    .infinit{
+        width:100%;
+        $height:14rem;
+        // border:1px solid red;
+        .article_init{
+            width:100%;
+            height:$height;
+            .swiper-wrapper{
+                position:relative;
+                width:100%;
+                height:$height;
+                img{
+                    width:100%;
+                    height:$height;
+                }
+                .title{
+                    position:absolute;
+                    // border:1px solid red;
+                    bottom:0.8rem;
+                    left:1rem;
+                    width:90%;
+                    height:2.2rem;
+                    font-size:0.9rem;
+                    overflow:hidden;
+                    color:#fff;
+                    display:flex;
+                    align-items:center;
+                }
+            }
+        }
+    }
+    .nav{
+        width:100%;
+        height:3rem;
+        // border:1px solid red;
+        display:flex;
+        align-items:center;
+        padding-left:0.4rem;
+        div{
+            width:20%;
+            height:3.5rem;
+            @extend %flex;
+            font-size:0.9rem;
+        }
+        .active{
+            color:#4da635;
+            border-bottom:2px solid #4da635;
+        }
+    }
+    .acticle_title{
+        width:100%;
+        padding-top:0.2rem;
+        .content{
+            padding:0.3rem 0.4rem;
+            p{
+                font-size:0.98rem;
+                font-weight:600;
+            }
+            span{
+                font-size:0.9rem;
+            }
+        }
+    }
+    .article_footer{
+        width: 100%;
+        height:2.2rem;
+        // border: 1px solid red;
+        background-color:#f4f4f4;
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        span{
+            font-size:0.9rem;
+            margin-left:0.3rem;
+        }
+        .loader{
+            width:1.6rem;
+            height:1.6rem;
+            border:1px solid red;
+            font-size: 10px;
+            position: relative;
+            text-indent: -9999em;
+            border-top: 0.3em solid #f8846d;
+            border-right: 0.3em solid #f8846d;
+            border-bottom: 0.3em solid #f8846d;
+            border-left: 0.3em solid #fff;
+            -webkit-animation: load8 2s infinite linear;
+            animation: load8 1.5s infinite linear;
+            &:after{
+                border-radius: 50%;
+                width: 3rem;
+                height: 3rem;
+            }
+            @-webkit-keyframes load8 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+                }
+                @keyframes load8 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+                }
+        }
+        
+    }
+}
 
