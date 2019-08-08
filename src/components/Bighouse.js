@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import "../scss/search.scss"
 import Roll from "./son/Dynamic_roll"
 import "../css/eight8.css"
+import Search from "./son/Public_search"
 class Bighouse extends React.Component {
     constructor(props) {
         super(props)
@@ -12,7 +13,6 @@ class Bighouse extends React.Component {
             { title: "旅游景点", content: ["不限", "学区房", "别墅", "商住", "别墅", "养老", "商住", "投资", "温泉社区", "海景房"] },
             { title: "代售", content: ["不限", "在售", "待售", "售完", "现房", "尾盘", "其他"] }], nav_off: true, nav_num: 100, nav_close: "none",
             nav_win: false,load_data:[],load_off:true,load_text:"正在加载",load_close:"block"
-            
         }
     }
     componentWillMount() {
@@ -23,7 +23,6 @@ class Bighouse extends React.Component {
         }
         list[2].video=false
         this.setState({load_data:list})
-        //video:true,title:"富力湾",price:"均价约：19888元/㎡",address:"地址：陵水县香水湾旅游度假区B区南段",offer:"全款享94折"
     }
     componentDidMount(){
         this.loading()
@@ -32,7 +31,6 @@ class Bighouse extends React.Component {
         var inter=new IntersectionObserver(
             (element)=>{
                 if(element[0].isIntersecting){
-                    // console.log(this.state.load_off)
                     if(this.state.load_off){
                         this.load_add()
                     }
@@ -45,7 +43,6 @@ class Bighouse extends React.Component {
     load_add=()=>{
         this.setState({load_off:false})
         var list=this.state.load_data
-        console.log(list)
         var num=list.length
         if(num>= 20){
             var load=false
@@ -86,7 +83,6 @@ class Bighouse extends React.Component {
         }
     }
     nav_btn = function (e) {
-       
         var num = this.state.nav_num
         var win = this.state.nav_win
         if (e === 0) {
@@ -125,11 +121,7 @@ class Bighouse extends React.Component {
                 <span>大楼盘列表</span>
                 <p></p>
             </div>
-            <div className="search">
-                <div className="pad">
-                    <input placeholder="请输入楼盘名"></input><div className="right"><span></span><img src="http://127.0.0.1:5050/house/icon/search.png"></img></div>
-                </div>
-            </div>
+            <Search text="请输入楼盘名称"></Search>
             <Roll></Roll>
             <div className="nav_down">
                 {

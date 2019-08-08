@@ -10,6 +10,7 @@ import Answer from "./components/son/info_house/Answer"
 import Search from "./components/Search"
 import Bighouse from "./components/Bighouse"
 import Article from "./components/Article"
+import House_map from "./components/House_map"
 let routers =[
     {path:"/", exact:true, component:Home},
     {path:"/house",component:House},
@@ -24,6 +25,7 @@ let routers =[
     ]},
     {path:"/search",component:Search},
     {path:"/bighouse",component:Bighouse},
-    {path:"/article",component:Article}
+    {path:"/article",component:Article},
+    {path:"/map",component:House_map}
 ]
 export default routers;

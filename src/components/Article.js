@@ -1,11 +1,13 @@
 import React,{Component} from "react"
 import "../css/swiper.min.css"
 import Swiper from "swiper"
+import Footer from "./son/Footer"
 class Article extends React.Component {
     constructor(props){
         super(props)
         this.state={
             nav:[{text:"本地资讯"},{text:"楼盘动态"},{text:"购房指南"}],
+            nav_img:[{text:"购房指南：异地购房的注意事项",img:"http://cdn.lou86.com/public/uploads/20190301/be1a089ad87be294fef71a135eea3043.jpg"}],
             one:[{title:"约惠七夕！三亚热销房源暖心推荐",time:"2019-08-06"},
             {title:"2019年楼市“中考”成绩如何？三份答卷为你总结",time:"2019-07-02"},
             {title:"绿地集团战略重组贵州药材 大健康产业混改首单亮相",time:"2019-06-02"}],
@@ -38,9 +40,7 @@ class Article extends React.Component {
         this.setState({nav:list})
     }
     componentDidMount(){
-        var mySwiper = new Swiper('.article_init', {
-            
-        })
+        var mySwiper = new Swiper('.article_init', {})
         this.article_footer()
     }
     nav_btn(key){
@@ -51,15 +51,21 @@ class Article extends React.Component {
         list[key].cb=true
         if(key===0){
             var news=this.state.one
+            var img=[{text:"购房指南：异地购房的注意事项",img:"http://cdn.lou86.com/public/uploads/20190301/be1a089ad87be294fef71a135eea3043.jpg"}]
         }else if(key===1){
             var news=this.state.two
+            var img=[{text:"购房指南：异地购房的注意事项",img:"http://cdn.lou86.com/public/uploads/20190301/be1a089ad87be294fef71a135eea3043.jpg"}]
         }else if(key===2){
             var news=this.state.three
+            var img=[{text:"购房指南：首套房优惠政策内容解析",img:"http://cdn.lou86.com/public/uploads/20190108/61aca22029ea2dd5e6b768365df660c6.jpg"}]
         }
         for(var i=0;i<news.length;i++){
             news[i].key=i
         }
-        this.setState({nav:list,load_nav:key,news:news})
+        if(news.length<=24){
+            this.setState({load_off:true,load_text:"加载更多",load_close:"flex"})
+        }
+        this.setState({nav:list,load_nav:key,news:news,nav_img:img})
     }
     article_footer(){
         var inter=new IntersectionObserver((footer)=>{
@@ -86,10 +92,9 @@ class Article extends React.Component {
             var list=this.state.news
             var arr={key:i,title:"2019年楼市“中考”成绩如何？三份答卷为你总结",time:"2019-07-02"}
         }
-        console.log(list)
         var num=list.length
         if(num<=24){
-            for(var i=num;i<num+4;i++){
+            for(var i=num;i<num+6;i++){
                 list.push(arr)
             }
             setTimeout(()=>{
@@ -97,19 +102,22 @@ class Article extends React.Component {
             },800)
         }else{
             this.setState({load_text:"没有更多数据了",load_close:"none"})
-        }
-        
-        
+        } 
     }
     render(){
         return (<div className="article_total">
             <div className="infinit">
                 <div className="swiper-container article_init">
                     <div className="swiper-wrapper">
-                        <div className="swiper-slide">
-                            <img src="http://cdn.lou86.com/public/uploads/20190301/be1a089ad87be294fef71a135eea3043.jpg"></img>
-                            <div className="title">购房指南：异地购房的注意事项</div>
-                            </div>
+                        {
+                            this.state.nav_img.map((value,key)=>{
+                                return (<div className="swiper-slide" key={key}>
+                                <img src={value.img}></img>
+                                <div className="title">{value.text}</div>
+                                </div>)
+                            })
+                        }
+                        
                     </div>
                 </div>
             </div>
@@ -119,7 +127,6 @@ class Article extends React.Component {
                         return (<div key={key} className={value.cb?"active":""} onClick={this.nav_btn.bind(this,key)}>{value.text}</div>)
                     })
                 }
-                
             </div>
             <div className="acticle_title">
                 {
@@ -130,11 +137,11 @@ class Article extends React.Component {
                     </div>)
                     })
                 }
-                
             </div>
             <div className="article_footer" ref="footer">
                 <div className="loader" style={{display:this.state.load_close}}></div><span>{this.state.load_text}</span>
             </div>
+            <Footer></Footer>
         </div>)
     }
 }
