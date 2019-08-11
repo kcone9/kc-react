@@ -8,7 +8,7 @@ class App extends React.Component {
     super(props)
   }
   render() {
-    return (<Router><div >
+    return (<Router><div>
       {
         routers.map((route,key)=>{
           if(route.exact){

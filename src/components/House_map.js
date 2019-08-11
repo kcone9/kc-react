@@ -127,8 +127,10 @@ class House_map extends React.Component {
                     </div> : ""
                 }
             </div>
+            <div className="map_container">
             <div className="map" id="phone_map">
                 
+                </div>
             </div>
         </div>)
     }
