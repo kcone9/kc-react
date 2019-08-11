@@ -67,6 +67,9 @@ class Home extends React.Component {
     componentWillUnmount() {
         this.setState = () => { }
     }
+    componentWillUnmount(){
+        this.state=null
+    }
     lazy = (e) => {
         var that = this
         if (this.state.dataswitch) {
