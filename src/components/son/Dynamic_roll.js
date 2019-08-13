@@ -16,6 +16,11 @@ class Dynamic_roll extends React.Component {
     componentDidMount(){
         this.margin()
     }
+    componentWillUnmount(){
+        this.setState=(state,callback)=>{
+            return
+        }
+    }
     margin() {
         setInterval(() => {
             var n = this.state.roll.length

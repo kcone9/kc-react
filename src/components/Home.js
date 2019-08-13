@@ -65,7 +65,9 @@ class Home extends React.Component {
         this.lazy()
     }
     componentWillUnmount() {
-        this.setState = () => { }
+        this.setState = (state,callback)=>{
+            return
+        }
     }
     componentWillUnmount(){
         this.state=null
