@@ -269,7 +269,6 @@ class Home extends React.Component {
             <div className="home_more">
                 <Link to="/house">查看更多</Link>
             </div>
-
             <Footer></Footer>
         </div>)
     }

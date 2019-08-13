@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import "../scss/detail.scss"
 import House from "./son/House_son"
 import Footer from "./son/Footer"
-import {Redirect} from "react-router-dom"
+import {Redirect,Link} from "react-router-dom"
 class Detail extends React.Component {
     constructor(props) {
         super(props)
@@ -85,9 +85,9 @@ class Detail extends React.Component {
         }
         return (<div>
             <div className="detail_header">
-                <div className="back">
+                <Link className="back" to="/">
                     <img src="http://127.0.0.1:5050/house/icon/back.png"></img>
-                </div>
+                </Link>
                 <div className="aside">
                     <img src="http://127.0.0.1:5050/house/icon/aside.png"></img>
                 </div>

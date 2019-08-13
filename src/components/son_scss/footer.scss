@@ -11,7 +11,7 @@
         margin:0 auto;
         $height:2.8rem;
         display:flex;
-        color:#fff;
+        // color:#fff;
         align-items:center;
         border-bottom:1px solid #5f6073;
         .four{
@@ -20,6 +20,10 @@
             height:$height;
             @extend %flex;
             font-size:0.9rem;
+            a{
+                color:#fff;
+                text-decoration:none;
+            }
         }
     }
     .footer_down{

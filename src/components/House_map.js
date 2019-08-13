@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import "../scss/search.scss"
 import Search from "./son/Public_search"
+import {Redirect} from "react-router-dom"
 class House_map extends React.Component {
     constructor(props) {
         super(props)
@@ -11,7 +12,7 @@ class House_map extends React.Component {
             nav_three: ["不限", "住宅", " 复式", "露台", "低总价", "返租", "不限购", "刚需", "学区房"],
             nav_more: [{ text: "物业类型", content: [] },
             { text: "销售状态", content: [] }],
-            nav_container: [], nav_off: false, nav_switch: true, nav_num: 100
+            nav_container: [], nav_off: false, nav_switch: true, nav_num: 100,jump:false
         }
     }
     componentWillMount() {
@@ -103,7 +104,7 @@ class House_map extends React.Component {
         var point = new BMap.Point(109.511661, 18.256092);
         map.centerAndZoom(point, 16);
         map.addControl(new BMap.NavigationControl({ anchor: "BMAP_ANCHOR_BOTTOM_RIGHT", type: "BMAP_NAVIGATION_CONTROL_ZOOM" }))
-        map.addControl(new BMap.GeolocationControl());
+        // map.addControl(new BMap.GeolocationControl());
         var geolocation = new BMap.Geolocation();
         geolocation.getCurrentPosition(function (r) {
             console.log(r)
@@ -190,10 +191,17 @@ class House_map extends React.Component {
         list[key].content[keys].cb = true
         this.setState({ nav_container: list })
     }
+    back(){
+        // this.setState({jump:true})
+        this.props.history.go(-1)
+    }
     render() {
+        if(this.state.jump){
+            return (<Redirect to="/"></Redirect>)
+        }
         return (<div className="phone_map">
             <div className="header">
-                <img src="http://127.0.0.1:5050/house/icon/arr_left_gary.png"></img>
+                <img onClick={this.back.bind(this)} src="http://127.0.0.1:5050/house/icon/arr_left_gary.png"></img>
                 <p>三亚</p><span>--</span>
             </div>
             <Search text="请输入楼盘名称/关键词"></Search>

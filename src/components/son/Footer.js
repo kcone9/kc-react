@@ -1,6 +1,6 @@
 import React,{Component} from "react"
 import "../son_scss/footer.scss"
-import {Redirect} from "react-router-dom"
+import {Redirect,Link} from "react-router-dom"
 class Footer extends React.Component{
     constructor(props){
         super(props)
@@ -9,7 +9,8 @@ class Footer extends React.Component{
         }
     }
     btn(){
-        this.setState({map_off:true})
+        // this.setState({map_off:true})
+        console.log(233)
     }
     render(){
         if(this.state.map_off){
@@ -17,10 +18,10 @@ class Footer extends React.Component{
         }
         return (<div className="footer_head">
             <div className="nav">
-                <div className="four">网站地图</div>|
-                <div className="four" onClick={this.btn.bind(this)}>手机版</div>|
-                <div className="four">电脑版</div>|
-                <div className="four">关于我们</div>
+                <div className="four"><Link to="/map">网站地图</Link></div>|
+                <div className="four"><Link to="/map">手机版</Link></div>|
+                <div className="four"><Link to="">电脑版</Link></div>|
+                <div className="four"><Link to="">关于我们</Link></div>
             </div>
             <div className="footer_down">
                 <span className="company">寻客猫</span>

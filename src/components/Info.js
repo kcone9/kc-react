@@ -11,8 +11,8 @@ class Info extends React.Component {
         }
     }
     back=()=>{
-        // this.props.history.go(-1)
-        this.setState({jump:true})
+        this.props.history.go(-1)
+        // this.setState({jump:true})
     }
     render(){
         if(this.state.jump){
