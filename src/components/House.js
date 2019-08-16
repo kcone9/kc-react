@@ -4,6 +4,7 @@ import "../css/swiper.min.css"
 import Swiper from "swiper"
 import axios from "axios"
 import Roll from "./son/Dynamic_roll"
+import $ from "jquery"
 class House extends React.Component {
     constructor(props) {
         super(props)
@@ -155,18 +156,19 @@ class House extends React.Component {
         addelement()
     }
     scroll_exce(){
-        
         var exce=new IntersectionObserver((ex)=>{
             if(ex[0].isIntersecting){
                 var num=0
             }else{
                 var num=1
             }
-            // console.log(ex[0].isVisible,ex[0].isIntersecting)
             this.setState({scroll_top:num})
         })
         exce.observe(this.refs.exce)
-        // console.log(this.refs.exce)
+    }
+    scroll_top(e){
+        e.preventDefault()
+        $("html,body").animate({scrollTop:"0px"})
     }
     render() {
         return (<div className="house_main">
@@ -435,7 +437,7 @@ class House extends React.Component {
                     })
                 }
             </div>
-            <a className="house_top" onClick={this.scroll_top} href="#top" style={{opacity:this.state.scroll_top}}>
+            <a className="house_top" onClick={this.scroll_top.bind(this)}  style={{opacity:this.state.scroll_top}}>
                 <img src="http://cdn.lou86.com/public/static/phone/image/icons/new-top.png"></img>
             </a>
             <div className="scrollfooter" style={{ display: this.state.scroll_close }}>
