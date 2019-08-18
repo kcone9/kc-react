@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import routers from "./routes"
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { HashRouter as Router, Route, Link } from "react-router-dom"
 
 class App extends React.Component {
   constructor(props) {

@@ -19,7 +19,7 @@ class Home extends React.Component {
             { title: "http://cdn.lou86.com/public/uploads/slider/20190509/c38b63ec6f6fcd5165aa640a75caf076.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190601/1d47ae6b9affb0f2a652ec904cadc741.jpg" }],
             acttop: [], actbottom: [], rec: [], find: ["6千以下", "6-7千", "7-8千", "8千-1万", "1万-1.3万", "1.3-1.5万", "1.5-2万", "2万以上"],
-            find_type: [],jump:false,
+            find_type: [],jump:false,homepath:"/react/house",
             imgnum: 0,
             dataswitch: false
         }
@@ -78,7 +78,7 @@ class Home extends React.Component {
             var observer = new IntersectionObserver(function (changes) {
                 changes.forEach(function (item, index) {
                     if (item.isIntersecting) {
-                        if (item.target.getAttribute('src') === '/static/media/loading.ccf68734.gif') {
+                        if (item.target.getAttribute('src') === that.state.homepath+'/static/media/loading.ccf68734.gif') {
                             setTimeout(() => {
                                 item.target.src = item.target.getAttribute('data-src')
                             }, 500)
@@ -89,6 +89,7 @@ class Home extends React.Component {
             });
             function addObserver() {
                 var listItems = document.querySelectorAll('.rec>.content>.img>img');
+                console.log(listItems)
                 if (listItems != []) {
                     listItems.forEach(function (item) {
                         observer.observe(item);
