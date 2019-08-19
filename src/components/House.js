@@ -14,10 +14,10 @@ class House extends React.Component {
             { img: "/public/static/phone/img/icons/nav_2.png", title: "活动专区" },
             { img: "/public/static/phone/img/icons/nav_3.png", title: "航怕看房" },
             { img: "/public/static/phone/img/icons/nav_4.png", title: "特价房" }],
-             swiper: [], swipers: true,
+            swiper: [], swipers: true,
             select: [{ title: "区域" }, { title: "价格" }, { title: "户型" }, { title: "更多" }],
             pile: [], pileall: null, pilemore: false, pileclose: 4, piledis: "flex", house: [], adv: [],
-            hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true,scroll_top:0
+            hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true,lazy_length:0, scroll_top: 0
         }
     }
     componentWillMount() {
@@ -29,9 +29,11 @@ class House extends React.Component {
         for (var i = 0; i < select.length; i++) {
             select[i].img = "http://127.0.0.1:5050/house/icon/arr_down_gray.png"
             select[i].color = "#333"
+            select[i].cb = false
         }
         select[0].img = "http://127.0.0.1:5050/house/icon/arr_down_select.png"
         select[0].color = "#4da635"
+        select[0].cb = true
         var house = []
         for (var i = 0; i < 3; i++) {
             house.push({
@@ -45,9 +47,24 @@ class House extends React.Component {
             this.setState({ swiper: res.data.reg })
         })
         axios.get("http://127.0.0.1:5050/details/house_data?label=select").then(res => {
+            var list=res.data
+            for(var li of list.more){
+                for(var l of li.reg){
+                    l.cb=false
+                }
+            }
+            for(var i=0;i<list.more.length;i++){
+                for(var j=0;j<li.reg.length;j++){
+                    if(j===0){
+                        list.more[i].reg[j].cb=true
+                    }else list.more[i].reg[j].cb=false
+                    
+                }
+                
+            }
             this.setState({ pile: res.data.area, pileall: res.data })
         })
-        
+
         axios.get("http://127.0.0.1:5050/details/house_data?label=house_hot").then(res => {
             this.setState({ hot: res.data.reg })
         })
@@ -67,6 +84,7 @@ class House extends React.Component {
             this.setState({ adv: res.data.reg })
         })
         this.scroll_exce()
+        this.lazy()
     }
     componentDidUpdate() {
         if (this.state.swiper.length > 0) {
@@ -83,9 +101,8 @@ class House extends React.Component {
                 })
                 this.setState({ swipers: false })
             }
-
         }
-        
+        // this.lazy()
     }
     btn_select = (e) => {
         var list = this.state.select
@@ -102,6 +119,7 @@ class House extends React.Component {
         for (var li of list) {
             li.color = "#333"
             li.img = "http://127.0.0.1:5050/house/icon/arr_down_gray.png"
+            li.cb = false
         }
         if (this.state.pileclose == e) {
             var n = 4
@@ -112,11 +130,20 @@ class House extends React.Component {
             var display = "flex"
             list[e].color = "#4da635"
             list[e].img = "http://127.0.0.1:5050/house/icon/arr_down_select.png"
+            list[e].cb = true
         }
         if (e < 3) {
             var more = false
         }
         this.setState({ select: list, pile: num, pilemore: more, pileclose: n, piledis: display })
+    }
+    son_btn(key,keys){
+        var list=this.state.pile
+        for(var li of list[key].reg){
+            li.cb=false
+        }
+        list[key].reg[keys].cb=true
+        this.setState({pile:list})
     }
     house_scroll() {
         // var that=this
@@ -128,47 +155,56 @@ class House extends React.Component {
             setTimeout(() => {
                 // 数据加载完毕再让其开启，数据到底让其关闭,关闭加载窗 scroll_close:none
                 this.setState({ scroll: list, scroll_sw: true })
-                this.lazy()
+                // this.lazy()
             }, 1000)
         }
     }
-    lazy() {
+    lazy(boolean,ele) {
         var that = this
+        if(boolean){
+        }else{
+        }
         var inter = new IntersectionObserver(function (changes) {
-            for (var ch of changes) {
-                if (ch.isIntersecting) {
-                    if (ch.target.getAttribute("src") === "/static/media/loading.ccf68734.gif") {
+            console.log(changes.length)
+            that.setState({lazy_length:changes.length})
+            for (var i=0;i<changes.length;i++) {
+                // console.log(ch)
+                /*if (changes[].isIntersecting) {
+                    // console.log("触发懒加载")
+                    if (ch.target.getAttribute("src") === "/static/media/loading.ccf68734.gif") {  
                         setTimeout(() => {
+                            // console.log("更换路径")
                             ch.target.src = ch.target.getAttribute("data-src")
-
-                        }, 300)
+                            // console.log("路径"+ch.target.src)
+                        }, 3000)
                     }
 
-                }
+                }*/
             }
         })
         function addelement() {
             var item = document.querySelectorAll(".indes>.top>img")
+            // console.log(item)
             for (var it of item) {
                 inter.observe(it)
             }
         }
         addelement()
     }
-    scroll_exce(){
-        var exce=new IntersectionObserver((ex)=>{
-            if(ex[0].isIntersecting){
-                var num=0
-            }else{
-                var num=1
+    scroll_exce() {
+        var exce = new IntersectionObserver((ex) => {
+            if (ex[0].isIntersecting) {
+                var num = 0
+            } else {
+                var num = 1
             }
-            this.setState({scroll_top:num})
+            this.setState({ scroll_top: num })
         })
         exce.observe(this.refs.exce)
     }
-    scroll_top(e){
+    scroll_top(e) {
         e.preventDefault()
-        $("html,body").animate({scrollTop:"0px"})
+        $("html,body").animate({ scrollTop: "0px" })
     }
     render() {
         return (<div className="house_main">
@@ -221,7 +257,9 @@ class House extends React.Component {
             <div className="hr"></div>
             <div className="select">
                 {this.state.select.map((value, key) => {
-                    return (<div onClick={() => { this.btn_select(key) }} key={key}><span style={{ color: value.color }}>{value.title}</span><img src={value.img}></img></div>)
+                    return (<div onClick={() => { this.btn_select(key) }} key={key} className={value.cb ? "select_active" : "select"}>
+                        <span style={{ color: value.color }}>{value.title}</span>
+                        <img src={value.img} className={value.cb?"img_active":""}></img></div>)
                 })}
             </div>
             <div className="pile" style={{ display: this.state.piledis }}>
@@ -234,14 +272,17 @@ class House extends React.Component {
                                 <div className="title"><span>{value.title}</span></div>
                                 <div className="content">
                                     {
-                                        value.reg.map((values, keys) => {
-                                            return (<div className="son" key={keys}><span >{values.text}</span></div>)
+                                        value.reg.map((values, keys) => { 
+                                            return (<div className={values.cb?"son son_active":"son"}  key={keys} onClick={this.son_btn.bind(this,key,keys)}><span>{values.text}</span></div>)
                                         })
                                     }
                                 </div></div>
                         }
                         return (element)
                     })
+                }
+                {
+                    this.state.pilemore?<div className="btn"><button>确定</button></div>:""
                 }
             </div>
             <div className="hr"></div>
@@ -250,7 +291,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.img} data-src={value.img} data-id={key}></img>
+                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -307,7 +348,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.img} data-src={value.img} data-id={key}></img>
+                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -361,7 +402,7 @@ class House extends React.Component {
                     this.state.house.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.img} data-src={value.img} data-id={key}></img>
+                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -408,7 +449,7 @@ class House extends React.Component {
                     this.state.scroll.map((value, key) => {
                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src={value.img} data-src={value.img} data-id={key}></img>
+                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
                                     <div className="price">{value.price}</div>
@@ -437,7 +478,7 @@ class House extends React.Component {
                     })
                 }
             </div>
-            <a className="house_top" onClick={this.scroll_top.bind(this)}  style={{opacity:this.state.scroll_top}}>
+            <a className="house_top" onClick={this.scroll_top.bind(this)} style={{ opacity: this.state.scroll_top }}>
                 <img src="http://cdn.lou86.com/public/static/phone/image/icons/new-top.png"></img>
             </a>
             <div className="scrollfooter" style={{ display: this.state.scroll_close }}>

@@ -98,6 +98,7 @@
     $height:2.5rem;
     display:flex;
     border-bottom:1px solid #f4f4f4;
+    transition:all 0.5s;
     div{
         width:25%;
         height:$height;
@@ -112,8 +113,17 @@
             width:1.0rem;
             height:1.0rem;
             margin-left:0.2rem;
+            // transform:rotate()
+            transition:all 0.5s;
         }
+        .img_active{
+            transform:rotate(180deg);
+        }
+
     }
+}
+.select_active{
+    border-bottom:1px solid rgb(77, 166, 53);
 }
 .pile{
     width:100%;
@@ -122,20 +132,34 @@
     padding-bottom:0; 
     display:flex;
     flex-wrap:wrap;
-    // border-bottom:1px solid red;
     .common{
-       width:3.9rem;
+    width:25%;
        height:1.5rem;
        @extend %flex;
        margin-bottom:0.4rem;
-       margin-left:0.6rem;
        border-radius:4px;
-    //    border:1px solid red; 
        span{
            font-size:0.5rem;
            white-space:nowrap;
        }
     }
+    .btn{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        button{
+            width:30%;
+            height:1.8rem;
+            border-radius:4px;
+            border-style:none;
+            font-size:0.9rem;
+            color:#fff;
+            background-color:#3cb950;
+        }
+        margin-bottom:0.6rem;
+    }
+    
     .more{
         width:100%;
         display:flex;
@@ -156,16 +180,21 @@
             flex-wrap:wrap;
             padding-top:0.4rem;
             .son{
-                width:3.9rem;
+                // width:3.9rem;
+                width:25%;
                 height:1.5rem;
                 @extend %flex;
                 margin-bottom:0.4rem;
-                margin-left:0.6rem;
+                // margin-left:0.6rem;
                 border-radius:4px;
                 // border:1px solid red; 
                 span{
                     font-size:0.5rem;
                 }
+            }
+            .son_active{
+                background-color:#3cb950;
+                color:#fff;
             }
         }
     }
@@ -287,6 +316,7 @@
         align-items:center;
         // justify-content:flex-end;
         padding-right:0.3rem;
+        overflow:hidden;
         img{
             position:absolute;
             width:5.2rem;
@@ -297,7 +327,7 @@
         }
         span{
             font-size:0.9rem;
-            margin-left:5.4rem;
+            margin-left:5.1rem;
             white-space:nowrap;
             text-overflow:ellipsis;
         }
@@ -317,14 +347,17 @@
         }
     }
     .sell{
+        width:100%;
         .title{
             width:100%;
-            height:2.4rem;
+            padding:0.6rem 0;
+            // height:2.4rem;
             // border:1px solid red;
             display:flex;
             align-items:center;
             padding-left:0.3rem;
             background-color:#f1f1f1;
+            flex-wrap:wrap;
             .img{
                 color:#fff;
                 font-size:0.9rem;

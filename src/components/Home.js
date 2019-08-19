@@ -19,20 +19,20 @@ class Home extends React.Component {
             { title: "http://cdn.lou86.com/public/uploads/slider/20190509/c38b63ec6f6fcd5165aa640a75caf076.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190601/1d47ae6b9affb0f2a652ec904cadc741.jpg" }],
             acttop: [], actbottom: [], rec: [], find: ["6千以下", "6-7千", "7-8千", "8千-1万", "1万-1.3万", "1.3-1.5万", "1.5-2万", "2万以上"],
-            find_type: [],jump:false,homepath:"/react/house",
+            find_type: [],jump:false,homepath:"/",
             imgnum: 0,
             dataswitch: false
         }
     }
     componentWillMount() {
-        axios.get("http://127.0.0.1:5050/details/house_nav").then(res => {
+        axios.get(this.props.domain+"/details/house_nav").then(res => {
             var list = res.data.reg
             var nav = []
             nav = list.splice(8, list.length)
             list = list.splice(0, 8)
             this.setState({ nav: list, navtwo: nav })
         })
-        axios.get("http://127.0.0.1:5050/details/house_data?label=given").then(res => {
+        axios.get(this.props.domain+"/details/house_data?label=given").then(res => {
             var top = res.data.reg.splice(0, 3)
             var bottom = res.data.reg
             this.setState({
@@ -40,7 +40,7 @@ class Home extends React.Component {
                 actbottom: bottom
             })
         })
-        axios.get("http://127.0.0.1:5050/details/house_data?label=rec").then(res => {
+        axios.get(this.props.domain+"/details/house_data?label=rec").then(res => {
             var list = res.data.reg
             for (var li of list) {
                 li.load = loadimg
@@ -68,6 +68,7 @@ class Home extends React.Component {
         this.setState = (state,callback)=>{
             return
         }
+        
     }
     componentWillUnmount(){
         this.state=null
@@ -78,7 +79,7 @@ class Home extends React.Component {
             var observer = new IntersectionObserver(function (changes) {
                 changes.forEach(function (item, index) {
                     if (item.isIntersecting) {
-                        if (item.target.getAttribute('src') === that.state.homepath+'/static/media/loading.ccf68734.gif') {
+                        if (item.target.getAttribute('src') === that.state.homepath+'static/media/loading.ccf68734.gif') {
                             setTimeout(() => {
                                 item.target.src = item.target.getAttribute('data-src')
                             }, 500)
@@ -89,7 +90,6 @@ class Home extends React.Component {
             });
             function addObserver() {
                 var listItems = document.querySelectorAll('.rec>.content>.img>img');
-                console.log(listItems)
                 if (listItems != []) {
                     listItems.forEach(function (item) {
                         observer.observe(item);
@@ -127,11 +127,11 @@ class Home extends React.Component {
                 <div className="input">
                     <div className="search">
                         <div className="left" onClick={this.back}>
-                            <span>海口</span><img src="http://127.0.0.1:5050/house/icon/arr_down.png"></img>
+                            <span>海口</span><img src={this.props.domain+"/house/icon/arr_down.png"}></img>
                             <div className="int"></div>
                         </div>
                         <div className="right"><input placeholder="请输入楼盘名称" />
-                            <img src="http://127.0.0.1:5050/house/icon/search.png"></img>
+                            <img src={this.props.domain+"/house/icon/search.png"}></img>
                         </div>
                     </div>
                 </div>
