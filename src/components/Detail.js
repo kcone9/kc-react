@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import "../scss/detail.scss"
 import House from "./son/House_son"
+import url from "url"
 import Footer from "./son/Footer"
 import {Redirect,Link} from "react-router-dom"
 class Detail extends React.Component {
@@ -30,6 +31,7 @@ class Detail extends React.Component {
             }
         }
         this.setState({ nav: list })
+        console.log(url.parse(this.props.location.search,true).query)
     }
     componentDidMount() {
         var BMap=window.BMap

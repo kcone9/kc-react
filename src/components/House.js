@@ -16,8 +16,9 @@ class House extends React.Component {
             { img: "/public/static/phone/img/icons/nav_4.png", title: "特价房" }],
             swiper: [], swipers: true,
             select: [{ title: "区域" }, { title: "价格" }, { title: "户型" }, { title: "更多" }],
-            pile: [], pileall: null, pilemore: false, pileclose: 4, piledis: "flex", house: [], adv: [],
-            hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", lazy: true,lazy_length:0, scroll_top: 0
+            pile: [], pileall: null, pilemore: false, pileclose: 4, piledis: "flex", house: [], 
+            house_page: 2, adv: [],hot: [], scroll: [], scroll_sw: true, scroll_close: "flex", 
+            scroll_text:"正在加载",lazy: true, lazy_length: 0, scroll_top: 0
         }
     }
     componentWillMount() {
@@ -34,43 +35,31 @@ class House extends React.Component {
         select[0].img = "http://127.0.0.1:5050/house/icon/arr_down_select.png"
         select[0].color = "#4da635"
         select[0].cb = true
-        var house = []
-        for (var i = 0; i < 3; i++) {
-            house.push({
-                img: "http://cdn.lou86.com/public/uploads/2017-09/25/336662588aeca666a61af52cc51d93d8.jpg",
-                load: "/static/media/loading.ccf68734.gif", title: "富力湾", price: 19888, ads: "海南-三亚", room: "1室~3室   55~121㎡",
-                time: "14小时前有人咨询", label: ["品牌地产", "海景房", "报销机票"], conpon: "交2万享10万"
-            })
-        }
-        this.setState({ house: house })
         axios.get("http://127.0.0.1:5050/details/house_data?label=house_swiper").then(res => {
             this.setState({ swiper: res.data.reg })
         })
         axios.get("http://127.0.0.1:5050/details/house_data?label=select").then(res => {
-            var list=res.data
-            for(var li of list.more){
-                for(var l of li.reg){
-                    l.cb=false
+            var list = res.data
+            for (var li of list.more) {
+                for (var l of li.reg) {
+                    l.cb = false
                 }
             }
-            for(var i=0;i<list.more.length;i++){
-                for(var j=0;j<li.reg.length;j++){
-                    if(j===0){
-                        list.more[i].reg[j].cb=true
-                    }else list.more[i].reg[j].cb=false
-                    
+            for (var i = 0; i < list.more.length; i++) {
+                for (var j = 0; j < li.reg.length; j++) {
+                    if (j === 0) {
+                        list.more[i].reg[j].cb = true
+                    } else list.more[i].reg[j].cb = false
                 }
-                
             }
             this.setState({ pile: res.data.area, pileall: res.data })
         })
-
         axios.get("http://127.0.0.1:5050/details/house_data?label=house_hot").then(res => {
             this.setState({ hot: res.data.reg })
         })
     }
     componentDidMount(option) {
-        // this.lazy()
+        // 加载更多触发条件
         var that = this
         var inter = new IntersectionObserver(
             function (element) {
@@ -83,10 +72,6 @@ class House extends React.Component {
         axios.get("http://127.0.0.1:5050/details/house_data?label=adv").then(res => {
             this.setState({ adv: res.data.reg })
         })
-        this.scroll_exce()
-        this.lazy()
-    }
-    componentDidUpdate() {
         if (this.state.swiper.length > 0) {
             if (this.state.swipers) {
                 var mySwiper = new Swiper('.swiper-container', {
@@ -102,7 +87,54 @@ class House extends React.Component {
                 this.setState({ swipers: false })
             }
         }
-        // this.lazy()
+        this.scroll_exce()
+        this.house_data(true)
+    }
+    componentDidUpdate(a,b) {
+        // console.log(a,b)
+    }
+    house_data(init, page) {
+        if (init) {
+            get_data(init,1)
+            get_data(init,2)
+        } else {
+            var page=this.state.house_page
+            page=page+1
+            this.setState({house_page:page})
+            get_data(init,page)
+        }
+        var that = this
+        function get_data(init,page){
+            axios.get("http://127.0.0.1:5050/details/house_list?page=" + page).then(res => {
+                if (res.data.code === 1) {
+                    for(var li of res.data.reg){
+                        li.virtual="/static/media/loading.ccf68734.gif"
+                    }
+                    if(init){
+                        var list = that.state.house
+                        list = list.concat(res.data.reg)
+                        var num=that.state.lazy_length
+                        num=num+1
+                        that.setState({ house: list,lazy_length:num})
+                        if(num===2){
+                            var row=[]
+                            for(var i=9;i<=11;i++){
+                                row.push(list[i])
+                            }
+                            that.setState({ scroll: row,lazy_length:12})
+                            that.lazy(true)
+                        }
+                    }else{
+                        var list = that.state.scroll
+                        list = list.concat(res.data.reg)
+                        that.setState({ scroll: list,scroll_sw: true  })
+                        that.lazy(false)
+                    }
+                } else {
+                    that.setState({ scroll_sw: false ,scroll_close:"none",scroll_text:"没有更多了"})
+                }
+            })
+        }
     }
     btn_select = (e) => {
         var list = this.state.select
@@ -137,59 +169,75 @@ class House extends React.Component {
         }
         this.setState({ select: list, pile: num, pilemore: more, pileclose: n, piledis: display })
     }
-    son_btn(key,keys){
-        var list=this.state.pile
-        for(var li of list[key].reg){
-            li.cb=false
+    son_btn(key, keys) {
+        var list = this.state.pile
+        for (var li of list[key].reg) {
+            li.cb = false
         }
-        list[key].reg[keys].cb=true
-        this.setState({pile:list})
+        list[key].reg[keys].cb = true
+        this.setState({ pile: list })
     }
     house_scroll() {
-        // var that=this
-        var house = this.state.house
-        var list = this.state.scroll
-        list = house.concat(list)
         if (this.state.scroll_sw) {
             this.setState({ scroll_sw: false })// 立即关闭，防止多次触发
             setTimeout(() => {
-                // 数据加载完毕再让其开启，数据到底让其关闭,关闭加载窗 scroll_close:none
-                this.setState({ scroll: list, scroll_sw: true })
-                // this.lazy()
+                this.house_data(false)
             }, 1000)
         }
     }
-    lazy(boolean,ele) {
+    lazy(boolean, ele) {
         var that = this
-        if(boolean){
-        }else{
+        if (boolean) {
+            lazy_start(boolean)
+        } else {
+            lazy_start(boolean)
         }
-        var inter = new IntersectionObserver(function (changes) {
-            console.log(changes.length)
-            that.setState({lazy_length:changes.length})
-            for (var i=0;i<changes.length;i++) {
-                // console.log(ch)
-                /*if (changes[].isIntersecting) {
-                    // console.log("触发懒加载")
-                    if (ch.target.getAttribute("src") === "/static/media/loading.ccf68734.gif") {  
-                        setTimeout(() => {
-                            // console.log("更换路径")
-                            ch.target.src = ch.target.getAttribute("data-src")
-                            // console.log("路径"+ch.target.src)
-                        }, 3000)
+        function lazy_start(boolean){
+            var list=that.state.house
+            var scroll=that.state.scroll
+            var inter = new IntersectionObserver( (changes)=> {
+                for (var it of changes) {
+                    if (it.isIntersecting) {
+                        if (it.target.getAttribute("src") === "/static/media/loading.ccf68734.gif") {
+                            var id=parseInt(it.target.getAttribute("data-id"))
+                            if(id<9){
+                                list[id].virtual=list[id].img
+                                setTimeout(() => {
+                                    that.setState({house:list})
+                                }, 1000)
+                            }else{
+                                if(id>8 && id<12){
+                                    list[id].virtual=list[id].img
+                                     scroll=[]
+                                    for(var i=9;i<12;i++){
+                                        scroll.push(list[i])
+                                    }
+                                }else{
+                                    var j=id-12+3
+                                    scroll[j].virtual=scroll[j].img
+                                }
+                                setTimeout(()=>{
+                                    that.setState({scroll:scroll})
+                                },1000)
+                            }
+                        }
                     }
-
-                }*/
+                }
+            })
+            var item = document.querySelectorAll(".indes>.top>.img>img")
+            if(boolean){
+                var num=12
+                var start=0
+            }else{
+                var start=that.state.lazy_length
+                var num=item.length
+                that.setState({lazy_length:num})
             }
-        })
-        function addelement() {
-            var item = document.querySelectorAll(".indes>.top>img")
-            // console.log(item)
-            for (var it of item) {
-                inter.observe(it)
+            for (var i=start;i<num;i++) {
+                item[i].setAttribute("data-id",i)
+                inter.observe(item[i])
             }
         }
-        addelement()
     }
     scroll_exce() {
         var exce = new IntersectionObserver((ex) => {
@@ -259,7 +307,7 @@ class House extends React.Component {
                 {this.state.select.map((value, key) => {
                     return (<div onClick={() => { this.btn_select(key) }} key={key} className={value.cb ? "select_active" : "select"}>
                         <span style={{ color: value.color }}>{value.title}</span>
-                        <img src={value.img} className={value.cb?"img_active":""}></img></div>)
+                        <img src={value.img} className={value.cb ? "img_active" : ""}></img></div>)
                 })}
             </div>
             <div className="pile" style={{ display: this.state.piledis }}>
@@ -272,8 +320,8 @@ class House extends React.Component {
                                 <div className="title"><span>{value.title}</span></div>
                                 <div className="content">
                                     {
-                                        value.reg.map((values, keys) => { 
-                                            return (<div className={values.cb?"son son_active":"son"}  key={keys} onClick={this.son_btn.bind(this,key,keys)}><span>{values.text}</span></div>)
+                                        value.reg.map((values, keys) => {
+                                            return (<div className={values.cb ? "son son_active" : "son"} key={keys} onClick={this.son_btn.bind(this, key, keys)}><span>{values.text}</span></div>)
                                         })
                                     }
                                 </div></div>
@@ -282,31 +330,38 @@ class House extends React.Component {
                     })
                 }
                 {
-                    this.state.pilemore?<div className="btn"><button>确定</button></div>:""
+                    this.state.pilemore ? <div className="btn"><button>确定</button></div> : ""
                 }
             </div>
             <div className="hr"></div>
             <div className="inde">
                 {
                     this.state.house.map((value, key) => {
-                        return (<div className="indes" key={key}>
+                        if (key < 3) return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
+                                <div className="img">
+                                    <img src={value.virtual} data-src={value.img}></img>
+                                    <div className={value.play===1?"play play_act":"play"} >
+                                        <img src="http://m.lou86.com/public/static/phone/image/play-circle.png"></img>
+                                    </div>
+                                    <span className={value.activity===1?"activity activity_act":"activity"}>折扣</span>
+                                </div>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
-                                    <div className="price">{value.price}</div>
+                                    <div className="price">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</div>
                                     <div className="address">{value.ads}</div>
                                     <div className="room">{value.room}</div>
                                 </div>
                                 <div className="call">
                                     <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel.gif"></img>
+                                    <img className={value.fav_img===1?"red red_active":"red"} src="http://m.lou86.com/public/static/phone/img/icons/hot.jpg"></img>
                                 </div>
                             </div>
                             <div className="mid">
                                 <div className="infor"><span>{value.time}</span></div>
                                 {
                                     value.label.map((values, keys) => {
-                                        return (<span className="dis" key={keys}>{values}</span>)
+                                        return (<span className="dis" key={keys}>{values.text}</span>)
                                     })
                                 }
                             </div>
@@ -346,24 +401,32 @@ class House extends React.Component {
             <div className="three">
                 {
                     this.state.house.map((value, key) => {
-                        return (<div className="indes" key={key}>
+                        if (key > 2 && key < 6) return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
+                                {/* <img src={value.img} data-src={value.img} data-id={key}></img> */}
+                                <div className="img">
+                                    <img src={value.virtual} data-src={value.img} ></img>
+                                    <div className={value.play===1?"play play_act":"play"} >
+                                        <img src="http://m.lou86.com/public/static/phone/image/play-circle.png"></img>
+                                    </div>
+                                    <span className={value.activity===1?"activity activity_act":"activity"}>折扣</span>
+                                </div>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
-                                    <div className="price">{value.price}</div>
+                                    <div className="price">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</div>
                                     <div className="address">{value.ads}</div>
                                     <div className="room">{value.room}</div>
                                 </div>
                                 <div className="call">
                                     <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel.gif"></img>
+                                    <img className={value.red_active===1?"red red_active":"red"} src="http://m.lou86.com/public/static/phone/img/icons/hot.jpg"></img>
                                 </div>
                             </div>
                             <div className="mid">
                                 <div className="infor"><span>{value.time}</span></div>
                                 {
                                     value.label.map((values, keys) => {
-                                        return (<span className="dis" key={keys}>{values}</span>)
+                                        return (<span className="dis" key={keys}>{values.text}</span>)
                                     })
                                 }
                             </div>
@@ -400,24 +463,32 @@ class House extends React.Component {
             <div className="three">
                 {
                     this.state.house.map((value, key) => {
-                        return (<div className="indes" key={key}>
+                        if (key > 5 && key < 9) return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
+                                {/* <img src={value.img} data-src={value.img} data-id={key}></img> */}
+                                <div className="img">
+                                    <img src={value.virtual} data-src={value.img} ></img>
+                                    <div className={value.play===1?"play play_act":"play"} >
+                                        <img src="http://m.lou86.com/public/static/phone/image/play-circle.png"></img>
+                                    </div>
+                                    <span className={value.activity===1?"activity activity_act":"activity"}>折扣</span>
+                                </div>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
-                                    <div className="price">{value.price}</div>
+                                    <div className="price">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</div>
                                     <div className="address">{value.ads}</div>
                                     <div className="room">{value.room}</div>
                                 </div>
                                 <div className="call">
                                     <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel.gif"></img>
+                                    <img className={value.fav_img===1?"red red_active":"red"} src="http://m.lou86.com/public/static/phone/img/icons/hot.jpg"></img>
                                 </div>
                             </div>
                             <div className="mid">
                                 <div className="infor"><span>{value.time}</span></div>
                                 {
                                     value.label.map((values, keys) => {
-                                        return (<span className="dis" key={keys}>{values}</span>)
+                                        return (<span className="dis" key={keys}>{values.text}</span>)
                                     })
                                 }
                             </div>
@@ -447,24 +518,32 @@ class House extends React.Component {
             <div className="house_scroll">
                 {
                     this.state.scroll.map((value, key) => {
-                        return (<div className="indes" key={key}>
+                         return (<div className="indes" key={key}>
                             <div className="top">
-                                <img src="/static/media/loading.ccf68734.gif" data-src={value.img} data-id={key}></img>
+                                {/* <img src={value.img} data-src={value.img} data-id={key}></img> */}
+                                <div className="img">
+                                    <img src={value.virtual} data-src={value.img} ></img>
+                                    <div className={value.play===1?"play play_act":"play"} >
+                                        <img src="http://m.lou86.com/public/static/phone/image/play-circle.png"></img>
+                                    </div>
+                                    <span className={value.activity===1?"activity activity_act":"activity"}>折扣</span>
+                                </div>
                                 <div className="info">
                                     <div className="title">{value.title}</div>
-                                    <div className="price">{value.price}</div>
+                                    <div className="price">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</div>
                                     <div className="address">{value.ads}</div>
                                     <div className="room">{value.room}</div>
                                 </div>
                                 <div className="call">
                                     <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel.gif"></img>
+                                    <img className={value.fav_img===1?"red red_active":"red"} src="http://m.lou86.com/public/static/phone/img/icons/hot.jpg"></img>
                                 </div>
                             </div>
                             <div className="mid">
                                 <div className="infor"><span>{value.time}</span></div>
                                 {
                                     value.label.map((values, keys) => {
-                                        return (<span className="dis" key={keys}>{values}</span>)
+                                        return (<span className="dis" key={keys}>{values.text}</span>)
                                     })
                                 }
                             </div>
@@ -481,9 +560,9 @@ class House extends React.Component {
             <a className="house_top" onClick={this.scroll_top.bind(this)} style={{ opacity: this.state.scroll_top }}>
                 <img src="http://cdn.lou86.com/public/static/phone/image/icons/new-top.png"></img>
             </a>
-            <div className="scrollfooter" style={{ display: this.state.scroll_close }}>
+            <div className="scrollfooter">
                 <div className="con">
-                    <div className="loader"></div><span>正在加载</span>
+                    <div className="loader" style={{ display: this.state.scroll_close }}></div><span>{this.state.scroll_text}</span>
                 </div>
             </div>
         </div>)

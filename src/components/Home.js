@@ -19,7 +19,7 @@ class Home extends React.Component {
             { title: "http://cdn.lou86.com/public/uploads/slider/20190509/c38b63ec6f6fcd5165aa640a75caf076.jpg" },
             { title: "http://cdn.lou86.com/public/uploads/slider/20190601/1d47ae6b9affb0f2a652ec904cadc741.jpg" }],
             acttop: [], actbottom: [], rec: [], find: ["6千以下", "6-7千", "7-8千", "8千-1万", "1万-1.3万", "1.3-1.5万", "1.5-2万", "2万以上"],
-            find_type: [],jump:false,homepath:"/",
+            find_type: [],jump:false,homepath:"/",jump_text:"",
             imgnum: 0,
             dataswitch: false
         }
@@ -112,12 +112,15 @@ class Home extends React.Component {
         }
         this.setState({find_type:row})
     }
-    back=()=>{
-        this.setState({jump:true})
+    back=(url,key)=>{
+        if(key!==undefined){
+            var url=url+"?rid="+key
+        }
+        this.setState({jump:true,jump_text:url})
     }
     render() {
         if(this.state.jump){
-            return <Redirect to="/search"/>
+            return <Redirect to={this.state.jump_text}/>
         }
         return (<div>
             <div className="home_header">
@@ -126,7 +129,7 @@ class Home extends React.Component {
                 </div>
                 <div className="input">
                     <div className="search">
-                        <div className="left" onClick={this.back}>
+                        <div className="left" onClick={this.back.bind(this,"/search")}>
                             <span>海口</span><img src={this.props.domain+"/house/icon/arr_down.png"}></img>
                             <div className="int"></div>
                         </div>
@@ -171,7 +174,6 @@ class Home extends React.Component {
                 <div className="content">
                     <div className="swiper-container">
                         <div className="swiper-wrapper">
-
                             {
                                 this.state.activity.map((value, key) => {
                                     return (<div className="swiper-slide" key={key}><img src={value.title}></img></div>)
@@ -247,7 +249,7 @@ class Home extends React.Component {
                 {
                     this.state.rec.map((value, key) => {
                         return (<div className="content" key={key} >
-                            <div className="img"><img src={value.load} data-src={value.img} ></img>
+                            <div className="img" onClick={this.back.bind(this,"/detail",value.rid)}><img src={value.load} data-src={value.img} ></img>
                                 <div className="abs">
                                     <div className="titles">{value.title}</div>
                                     <div className="price">约<span>{value.price}</span>{value.price < 1000 ? "万/套" : "元/㎡"}</div>
@@ -260,7 +262,7 @@ class Home extends React.Component {
                             </div>
                             <div className="address">
                                 <div className="left"><span>{value.site}</span></div>
-                                <button>电话咨询</button>
+                                <a href="tel:18289588240">电话咨询</a>
                             </div>
 
                         </div>)

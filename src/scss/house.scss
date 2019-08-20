@@ -1,4 +1,4 @@
-@import "../css/eight8.css";
+// @import "../css/eight8.css";
 %flex {
     display:flex;
     justify-content:center;
@@ -213,9 +213,49 @@
         display:flex;
         align-items:center;
         // border:1px solid red;
-        img{
+        .img{
+            position:relative;
             width:6.8rem;
-            height:5.2rem;
+                height:5.2rem;
+            img{
+                width:6.8rem;
+                height:5.2rem;
+                border-radius:4px;
+            }
+            .play{
+                width:6.8rem;
+                height:5.2rem;
+                position:absolute;
+                top:0;
+                left:0;
+                display:none;
+                @extend %flex;
+                img{
+                    width:2.5rem;
+                    height:2.5rem;
+                }
+            }
+            .play_act{
+                display:flex;
+            }
+            .activity{
+                display:none;
+                // padding:0.2rem 0.3rem;
+                width:2rem;
+                height:1.4rem;
+                background-color:rgba(255, 51, 0, 0.9);
+                color:#fff;
+                position:absolute;
+                left:0;
+                top:0;
+                font-size:0.7rem;
+                @extend %flex;
+                border-top-left-radius:4px;
+                border-bottom-right-radius:4px;
+            }
+            .activity_act{
+                display:flex;
+            }
         }
         .info{
             width:50%;
@@ -227,6 +267,9 @@
             .title{
                 font-size:0.9rem;
                 font-weight:700;
+                overflow:hidden;
+                white-space:nowrap;
+                text-overflow:hidden;
             }
             .price{
                 color:#fe0000;
@@ -245,7 +288,21 @@
         }
         .call{
             // border:1px solid red;
+            width:30%;
+            height:6rem;
             margin-left:0.3rem;
+            position:relative;
+            .red{
+                width:3rem;
+                height:auto;
+                position:absolute;
+                right:0;
+                bottom:0;
+                display:none;
+            }
+            .red_active{
+                display:block;
+            }
             img{
                 width:5.3rem;
                 height:4.17rem;
@@ -519,26 +576,95 @@
     $height:2.2rem;
     display:flex;
     justify-content:center;
-    background-color:rgba(72, 191, 1,0.7);
-    
+    overflow:hidden;
     // border:1px solid red;
     .con{
         width:50%;
         height:$height;
-        // display:flex;
-        // align-items:center;
         @extend %flex;
-        
-        // border:1px solid red;
         span{
             font-size:0.9rem;
+            margin-left:0.8rem;
+            color:#48bf01;
         }
         .loader{
-            width:1.5rem;
-            height:1.5rem;
-            // border:1px solid red;
+            &{
+                font-size: 8px;
+                overflow: hidden;
+                width: 1em;
+                height: 1em;
+                border-radius: 50%;
+                margin:0;
+                position: relative;
+                -webkit-animation: load6 1.7s infinite ease;
+                animation: load6 1.7s infinite ease;
+                }
+            @-webkit-keyframes load6 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+                5%,
+                95% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+                30% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.51em -0.66em 0 
+                -0.42em #48bf01, -0.75em -0.36em 0 -0.44em #48bf01, -0.83em -0.03em 0 
+                -0.46em #48bf01, -0.81em 0.21em 0 -0.477em #48bf01;
+                }
+                55% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.29em -0.78em 0 
+                -0.42em #48bf01, -0.43em -0.72em 0 -0.44em #48bf01, -0.52em -0.65em 0 
+                -0.46em #48bf01, -0.57em -0.61em 0 -0.477em #48bf01;
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+            }
+            @keyframes load6 {
+                0% {
+                    -webkit-transform: rotate(0deg);
+                    transform: rotate(0deg);
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+            5%,
+                95% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+                30% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.51em -0.66em 0 
+                -0.42em #48bf01, -0.75em -0.36em 0 -0.44em #48bf01, -0.83em -0.03em 0 
+                -0.46em #48bf01, -0.81em 0.21em 0 -0.477em #48bf01;
+                }
+                55% {
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.29em -0.78em 0 
+                -0.42em #48bf01, -0.43em -0.72em 0 -0.44em #48bf01, -0.52em -0.65em 0 
+                -0.46em #48bf01, -0.57em -0.61em 0 -0.477em #48bf01;
+                }
+                100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                    box-shadow: -0.11em -0.83em 0 -0.4em #48bf01, -0.11em -0.83em 0 
+                -0.42em #48bf01, -0.11em -0.83em 0 -0.44em #48bf01, -0.11em -0.83em 0 
+                -0.46em #48bf01, -0.11em -0.83em 0 -0.477em #48bf01;
+                }
+                    }
+                }
         }
-    }
 }
 .house_footer{
     width:100%;
