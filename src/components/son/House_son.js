@@ -48,8 +48,8 @@ class House_son extends React.Component {
                         <div className="top">
                             <img src={value.img} data-id={key}></img>
                             <div className="info">
-                                <div className="title">{value.title}</div>
-                                <div className="price">{value.price}</div>
+                                <div className="titles">{value.title}</div>
+                                <div className="price">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</div>
                                 <div className="address">{value.ads}</div>
                                 <div className="room">{value.room}</div>
                             </div>

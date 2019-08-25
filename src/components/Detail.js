@@ -3,12 +3,15 @@ import "../scss/detail.scss"
 import House from "./son/House_son"
 import url from "url"
 import Footer from "./son/Footer"
+import axios from "axios"
 import {Redirect,Link} from "react-router-dom"
 class Detail extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            nav: [{text:"主页",to:"/detail"},{text:"详情",to:"/info/"},{text:"户型",to:"/info/type"}, {text:"配套",to:"/info/mating"}, {text:"问答",to:"/info/answer"}], fold: "10rem", fold_text: "查看更多",
+            nav: [{text:"主页",to:"/detail"},{text:"详情",to:"/info/"},{text:"户型",to:"/info/type"}, 
+            {text:"配套",to:"/info/mating"}, {text:"问答",to:"/info/answer"}], 
+            fold: "10rem", fold_text: "查看更多",
             domain: "http://cdn.lou86.com",
             mating: [{ img: "/public/static/phone/img/icons/ico_44.png", text: "学校" },
             { img: "/public/static/phone/img/icons/ico_45.png", text: "医院" },
@@ -18,7 +21,8 @@ class Detail extends React.Component {
             { img: "/public/static/phone/img/icons/ico_49.png", text: "娱乐" },
             { img: "/public/static/phone/img/icons/ico_50.png", text: "银行" }],
             son: false, son_arr: [{ text: "推荐楼盘", cb: true }, { text: "热销楼盘", cb: false }],
-            jump:false,jump_from:""
+            jump:false,jump_from:"",detail_info:[],house_type:[],house_advantage:[],house_dynamic:[],
+            house_image:[],house_answer:[]
         }
     }
     componentWillMount() {
@@ -31,7 +35,66 @@ class Detail extends React.Component {
             }
         }
         this.setState({ nav: list })
-        console.log(url.parse(this.props.location.search,true).query)
+        var rid=parseInt(url.parse(this.props.location.search,true).query.rid)
+        // console.log(rid)
+        this.get_data(rid)
+        this.get_image(rid)
+    }
+    get_data(rid){
+        axios.get(this.props.domain+"/details/house_detail?rid="+rid).then((res)=>{
+            if(res.data.code===1){
+                var list=res.data.data.detail
+                function deal_date(str){
+                    str=str.split("T")[0]
+                    str=str.split("-")
+                    str[0]=str[0]+"年"
+                    str[1]=str[1]+"月"
+                    str[2]=str[2]+"日"
+                    var strs=""
+                    for(var s of str){
+                        strs=strs+s
+                    }
+                    return strs
+                }
+                list[0].update_time=deal_date(list[0].update_time)
+                list[0].label=res.data.data.detail_label
+                var answer=res.data.data.answer
+                for(var item of answer){
+                    item.cb=false
+                    item.height="2.2rem"
+                    item.time=deal_date(item.time)
+                }
+                // for(var item of answer){}
+                // console.log(answer)
+                this.setState({detail_info:list,house_type:res.data.data.type,
+                    house_advantage:res.data.data.advantage,house_dynamic:res.data.data.dynamic,
+                    house_answer:answer})
+            }
+        })
+    }
+    componentWillUpdate(){
+        // console.log(233)
+    }
+    answer_btn(key){
+        console.log(key)
+        var list=this.state.house_answer
+        if(!list[key].cb){
+            list[key].cb=!list[key].cb
+            list[key].height=""
+        }else{
+            list[key].cb=!list[key].cb
+            list[key].height="2.2rem"
+        }
+
+        this.setState({house_answer:list})
+
+    }
+    get_image(rid){
+        axios.get(this.props.domain+"/details/house_detail_image?rid="+rid).then(res=>{
+            if(res.data.code===1){
+                this.setState({house_image:res.data.reg})
+            }
+        })
     }
     componentDidMount() {
         var BMap=window.BMap
@@ -104,14 +167,17 @@ class Detail extends React.Component {
                     })
                 }
             </div>
-            <div className="detail_body">
-                <div className="detail_body_pad">
+            <div className="detail_body">{
+                this.state.detail_info.map((value,key)=>{
+                    return (<div className="detail_body_pad" key={key}>
                     <div className="header">
                         <div className="pad">
                             <div className="left">
-                                <div className="title"><span>怡海湾别墅</span><i>在售</i></div>
+                                <div className="title"><span>{value.title}</span><i>在售</i></div>
                                 <div className="label">
-                                    <span>海景房</span><span>报销机票</span><span>别墅</span><span>专车看房</span>
+                                    {value.label.map((values,keys)=>{
+                                        return (<span key={keys}>{values.text}</span>)
+                                    })}
                                 </div>
                             </div>
                             <div className="right">
@@ -122,13 +188,13 @@ class Detail extends React.Component {
                     <div className="intro">
                         <div className="price">
                             <div className="left">
-                                <span className="title">总价约:</span><span className="content">270万套</span>
+                                <span className="title">总价约:</span><span className="content">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</span>
                             </div>
                             <div className="right"><span>房贷计算器</span><img src="http://cdn.lou86.com/public/static/phone/img/icons/right.png"></img></div>
                         </div>
                         <div className="date">
                             <div className="title">更新：</div>
-                            <div className="time">2019年07月29日</div>
+                            <div className="time">{value.update_time}</div>
                         </div>
                         <div className="loan">
                             <div className="left"><div className="title">预算：</div>
@@ -150,23 +216,24 @@ class Detail extends React.Component {
                             <button>立即报名</button>
                         </div>
                     </div>
-                </div>
+                </div>)})}
             </div>
             <div className="detail_call">
                 <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel3.gif"></img>
                 <div><span>0898-32287843</span></div>
             </div>
             <div className="detail_info">
-                <div className="pad">
+                {this.state.detail_info.map((value,key)=>{
+                    return (<div className="pad" key={key}>
                     <div className="title">
                         <span className="info">楼盘信息</span><div><span>查看全部</span><img src="http://cdn.lou86.com/public/static/phone/img/icons/right.png"></img></div>
                     </div>
-                    <div className="table"><span className="t_title">总 价：</span><span className="info">270万/套</span></div>
-                    <div className="table"><span className="t_title">装 修：</span><span className="info">毛坯</span></div>
-                    <div className="table"><span className="t_title">户 型：</span><span className="info">(80~285平)精装别墅</span></div>
-                    <div className="table"><span className="t_title">开 盘：</span><span className="info">2018-01-31</span></div>
-                    <div className="table"><span className="t_title">物 业：</span><span className="info">绿城物业</span></div>
-                    <div className="table"><span className="t_title">地 址：</span><span className="info">海南省三亚陵水国际旅游岛先行试验区滨海度假区</span></div>
+                    <div className="table"><span className="t_title">{value.mean_t}</span><span className="info">{value.price}</span></div>
+                    <div className="table"><span className="t_title">{value.finish_t}</span><span className="info">{value.finish}</span></div>
+                    <div className="table"><span className="t_title">{value.types_t}</span><span className="info">{value.types}</span></div>
+                    <div className="table"><span className="t_title">{value.ptime_t}</span><span className="info">{value.ptime}</span></div>
+                    <div className="table"><span className="t_title">{value.real_t}</span><span className="info">{value.reals}</span></div>
+                    <div className="table"><span className="t_title">{value.adds_t}</span><span className="info">{value.adds}</span></div>
                     <div className="head">
                         <img className="one" src="http://cdn.lou86.com/public/uploads/zhiye/20190429/f2372ff3e70b89a92e0741994c373716.jpg"></img>
                         <img className="two" src="http://cdn.lou86.com/public/static/phone/img/icons/yuyin.gif"></img>
@@ -176,7 +243,8 @@ class Detail extends React.Component {
                             <img src="http://cdn.lou86.com/public/static/phone/img/icons/zoushi.jpg"></img> 降价通知我</button>
                         <button className="open"><img src="http://cdn.lou86.com/public/static/phone/image/tongzhi.png"></img> 开盘通知我</button>
                     </div>
-                </div>
+                </div>)
+                })}
 
             </div>
             <div className="detall_phone">
@@ -196,30 +264,16 @@ class Detail extends React.Component {
                         </div>
                     </div>
                     <div className="content">
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2018-01/16/thumb_748x578_2e9958b30b4bd61742f443ed0aa8b64e.jpg"></img>
-                            <p className="type">2室1厅1卫<span>在售</span></p>
-                            <p className="area">建面80.00m² </p>
-                            <p className="price">约270万/套</p>
-                        </div>
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2018-01/16/thumb_748x578_2e9958b30b4bd61742f443ed0aa8b64e.jpg"></img>
-                            <p className="type">2室1厅1卫<span>在售</span></p>
-                            <p className="area">建面80.00m² </p>
-                            <p className="price">约270万/套</p>
-                        </div>
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2018-01/16/thumb_748x578_2e9958b30b4bd61742f443ed0aa8b64e.jpg"></img>
-                            <p className="type">2室1厅1卫<span>在售</span></p>
-                            <p className="area">建面80.00m² </p>
-                            <p className="price">约270万/套</p>
-                        </div>
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2018-01/16/thumb_748x578_2e9958b30b4bd61742f443ed0aa8b64e.jpg"></img>
-                            <p className="type">2室1厅1卫<span>在售</span></p>
-                            <p className="area">建面80.00m² </p>
-                            <p className="price">约270万/套</p>
-                        </div>
+                        {
+                            this.state.house_type.map((value,key)=>{
+                                return (<div className="each" key={key}>
+                                <img src={value.img}></img>
+                                <p className="type">{value.text}<span>在售</span></p>
+                                <p className="area">{value.area}</p>
+                                <p className="price">{value.price}</p>
+                            </div>)
+                            })
+                        }
                     </div>
                     <div className="call">
                         <div className="left">
@@ -241,19 +295,14 @@ class Detail extends React.Component {
                     </div>
                     <ul style={{ height: this.state.fold }}>
                         <div className="abs"></div>
-                        <li>
-                            <div className="title">一线海景</div>
-                            <p>项目位于北纬18℃的三亚，200米一线亲海距离，长期生活在海边，相当于生活在“天然氧吧”中，可经常呼吸纯净的空气来洗肺。</p>
-                        </li>
-                        <li>
-                            <div className="title">品牌价值</div>
-                            <p>海南怡海湾由香港怡丰集团发展有限公司、海南信达置业有限公司联手打造。强强联手打造三亚高端品质楼盘。</p>
-                        </li>
-                        <li>
-                            <div className="title">区位优势</div>
-                            <p>海南怡海湾由香港怡丰集团发展有限公司、海南信达置业有限公司联手打造。强强联手打造三亚高端品质楼盘。</p>
-                        </li>
-
+                        {
+                            this.state.house_advantage.map((value,key)=>{
+                                return (<li key={key}>
+                                    <div className="title">{value.title}</div>
+                                    <p>{value.text}</p>
+                                </li>)
+                            })
+                        }
                     </ul>
                     <button onClick={this.fold}>{this.state.fold_text}</button>
                 </div>
@@ -276,26 +325,16 @@ class Detail extends React.Component {
                     </div>
                     <ul>
                         <div className="abs"></div>
-                        <li>
-                            <div className="time"><p>销控</p><span>2019.07.29 11:13</span></div>
-                            <div className="title">陵水怡海湾别墅采用现代热带风情园林 多方面打造</div>
-                            <div className="content"><span>怡海湾别墅在园林的设计规划上面采用现代热带风情园林，使用不同的层次营造多样性空间，开敞空间，私密空间，入户空间，多方面打造，在不同的环境条件下与其它园林要素有机组合来创造景观，使之构成一幅既符合生物学特性又具有美学价值的生物立体画，供人们观赏、游憩，现购房全款享99折优惠，如想了解该楼盘更多优惠信息，欢迎致电售楼处中心咨询。</span></div>
-                        </li>
-                        <li>
-                            <div className="time"><p>销控</p><span>2019.07.29 11:13</span></div>
-                            <div className="title">陵水怡海湾别墅采用现代热带风情园林 多方面打造</div>
-                            <p className="content">怡海湾别墅在园林的设计规划上面采用现代热带风情园林，使用不同的层次营造多样性空间，开敞空间，私密空间，入户空间，多方面打造，在不同的环境条件下与其它园林要素有机组合来创造景观，使之构成一幅既符合生物学特性又具有美学价值的生物立体画，供人们观赏、游憩，现购房全款享99折优惠，如想了解该楼盘更多优惠信息，欢迎致电售楼处中心咨询。</p>
-                        </li>
-                        <li>
-                            <div className="time"><p>销控</p><span>2019.07.29 11:13</span></div>
-                            <div className="title">陵水怡海湾别墅采用现代热带风情园林 多方面打造</div>
-                            <p className="content">怡海湾别墅在园林的设计规划上面采用现代热带风情园林，使用不同的层次营造多样性空间，开敞空间，私密空间，入户空间，多方面打造，在不同的环境条件下与其它园林要素有机组合来创造景观，使之构成一幅既符合生物学特性又具有美学价值的生物立体画，供人们观赏、游憩，现购房全款享99折优惠，如想了解该楼盘更多优惠信息，欢迎致电售楼处中心咨询。</p>
-                        </li>
-                        <li>
-                            <div className="time"><p>销控</p><span>2019.07.29 11:13</span></div>
-                            <div className="title">陵水怡海湾别墅采用现代热带风情园林 多方面打造</div>
-                            <p className="content">怡海湾别墅在园林的设计规划上面采用现代热带风情园林，使用不同的层次营造多样性空间，开敞空间，私密空间，入户空间，多方面打造，在不同的环境条件下与其它园林要素有机组合来创造景观，使之构成一幅既符合生物学特性又具有美学价值的生物立体画，供人们观赏、游憩，现购房全款享99折优惠，如想了解该楼盘更多优惠信息，欢迎致电售楼处中心咨询。</p>
-                        </li>
+                        {
+                            this.state.house_dynamic.map((value,key)=>{
+                                return (<li key={key} className={value.label==="优惠"?"yellow":""}>
+                                    <div className="time"><p className={value.label==="优惠"?"yellow":(value.label==="施工"?"site":"")}>{value.label}</p><span>2019.07.29 11:13</span></div>
+                                    <div className="title">{value.title}</div>
+                                    <div className="content"><span>{value.text}</span></div>
+                                    <div className={value.label==="优惠"?"garden gerden_yellow":(value.label==="施工"?"garden gerden_site":"garden")}></div>
+                                </li>)
+                            })
+                        }
                     </ul>
                     <div className="btn">
                         <button><img src="http://cdn.lou86.com/public/static/phone/image/dingyue.png"></img> 最新动态通知我</button>
@@ -322,17 +361,19 @@ class Detail extends React.Component {
                     <div className="title">
                         <span>买房问大家</span>
                     </div>
-                    <ul>
-                        <li>
+                    <ul>{
+                        this.state.house_answer.map((value,key)=>{
+                            return (<li key={key}>
                             <div className="ask">
                                 <img src="http://cdn.lou86.com/public/static/phone/img/icons/question.png"></img>
-                                <span>是采用采用新中式建筑风格吗</span>
+                                <span>{value.problem}</span>
                             </div>
+                            
                             <div className="answer">
                                 <div className="left">
-                                    <img src="http://cdn.lou86.com/public/uploads/zhiye/20190429/2d4bca3d847dde32cffa2389d32aab57.jpg"></img>
+                                    <img src={value.head}></img>
                                     <div className="right">
-                                        <p className="top">陈克己<span>行业资深顾问</span></p>
+                                        <p className="top">{value.author}<span>{value.babel}</span></p>
                                         <p className="bottom">咨询人数：<span>569</span>次</p>
                                     </div>
                                 </div>
@@ -344,66 +385,12 @@ class Detail extends React.Component {
                             <div className="content">
                                 <img src="http://cdn.lou86.com/public/static/phone/img/icons/answer.png"></img>
                                 <div className="des">
-                                    <p className="text">怡海湾项目采用新中式建筑风格--项目规划设计上，以建筑群的空间展开曲折，含蓄的儒家文件之美，传承礼仪与尺度，在院落与回廊见，构筑富有禅意的生活美学。</p>
-                                    <p className="spread">[展开全文]</p>
-                                    <p className="time">2019-07-23</p>
+                                    <p className="text" style={{height:value.height}}><span style={{height:value.height}}>{value.text}</span></p>
+                                    <p className="spread" onClick={this.answer_btn.bind(this,key)}>[展开全文]</p>
+                                    <p className="time">{value.time}</p>
                                 </div>
                             </div>
-                        </li>
-                        <li>
-                            <div className="ask">
-                                <img src="http://cdn.lou86.com/public/static/phone/img/icons/question.png"></img>
-                                <span>是采用采用新中式建筑风格吗</span>
-                            </div>
-                            <div className="answer">
-                                <div className="left">
-                                    <img src="http://cdn.lou86.com/public/uploads/zhiye/20190429/2d4bca3d847dde32cffa2389d32aab57.jpg"></img>
-                                    <div className="right">
-                                        <p className="top">陈克己<span>行业资深顾问</span></p>
-                                        <p className="bottom">咨询人数：<span>569</span>次</p>
-                                    </div>
-                                </div>
-                                <div className="right">
-                                    <img src="http://cdn.lou86.com/public/static/phone/img/icons/wei.jpg" className="message"></img>
-                                    <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel2.gif" className="phone"></img>
-                                </div>
-                            </div>
-                            <div className="content">
-                                <img src="http://cdn.lou86.com/public/static/phone/img/icons/answer.png"></img>
-                                <div className="des">
-                                    <p className="text">怡海湾项目采用新中式建筑风格--项目规划设计上，以建筑群的空间展开曲折，含蓄的儒家文件之美，传承礼仪与尺度，在院落与回廊见，构筑富有禅意的生活美学。</p>
-                                    <p className="spread">[展开全文]</p>
-                                    <p className="time">2019-07-23</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="ask">
-                                <img src="http://cdn.lou86.com/public/static/phone/img/icons/question.png"></img>
-                                <span>是采用采用新中式建筑风格吗</span>
-                            </div>
-                            <div className="answer">
-                                <div className="left">
-                                    <img src="http://cdn.lou86.com/public/uploads/zhiye/20190429/2d4bca3d847dde32cffa2389d32aab57.jpg"></img>
-                                    <div className="right">
-                                        <p className="top">陈克己<span>行业资深顾问</span></p>
-                                        <p className="bottom">咨询人数：<span>569</span>次</p>
-                                    </div>
-                                </div>
-                                <div className="right">
-                                    <img src="http://cdn.lou86.com/public/static/phone/img/icons/wei.jpg" className="message"></img>
-                                    <img src="http://cdn.lou86.com/public/static/phone/img/icons/tel2.gif" className="phone"></img>
-                                </div>
-                            </div>
-                            <div className="content">
-                                <img src="http://cdn.lou86.com/public/static/phone/img/icons/answer.png"></img>
-                                <div className="des">
-                                    <p className="text">怡海湾项目采用新中式建筑风格--项目规划设计上，以建筑群的空间展开曲折，含蓄的儒家文件之美，传承礼仪与尺度，在院落与回廊见，构筑富有禅意的生活美学。</p>
-                                    <p className="spread">[展开全文]</p>
-                                    <p className="time">2019-07-23</p>
-                                </div>
-                            </div>
-                        </li>
+                        </li>)})}
                     </ul>
                     <button className="more"><img src="http://cdn.lou86.com/public/static/phone/img/icons/more2.png"></img>查看更多回答</button>
                 </div>
@@ -418,18 +405,12 @@ class Detail extends React.Component {
                         </div>
                     </div>
                     <div className="content">
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2019-06/08/thumb_880x578_4ad79336fb228aeecb7211cda4302813.jpg"></img>
-                            <span>实景图-小区实景</span>
-                        </div>
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2019-06/08/thumb_880x578_4ad79336fb228aeecb7211cda4302813.jpg"></img>
-                            <span>实景图-小区实景</span>
-                        </div>
-                        <div className="each">
-                            <img src="http://cdn.lou86.com/public/uploads/2019-06/08/thumb_880x578_4ad79336fb228aeecb7211cda4302813.jpg"></img>
-                            <span>实景图-小区实景</span>
-                        </div>
+                        {this.state.house_image.map((value,key)=>{
+                            return (<div className="each" key={key}>
+                            <img src={value.img}></img>
+                            <span>{value.text}</span>
+                        </div>)
+                        })}
                     </div>
                 </div>
             </div>
