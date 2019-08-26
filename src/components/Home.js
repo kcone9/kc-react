@@ -113,9 +113,12 @@ class Home extends React.Component {
         this.setState({find_type:row})
     }
     back=(url,key)=>{
+        console.log(url,key)
         if(key!==undefined){
             var url=url+"?rid="+key
         }
+        // var url=url+"/"+key
+        // console.log(key)
         this.setState({jump:true,jump_text:url})
     }
     render() {

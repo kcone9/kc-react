@@ -22,10 +22,11 @@ class Detail extends React.Component {
             { img: "/public/static/phone/img/icons/ico_50.png", text: "银行" }],
             son: false, son_arr: [{ text: "推荐楼盘", cb: true }, { text: "热销楼盘", cb: false }],
             jump:false,jump_from:"",detail_info:[],house_type:[],house_advantage:[],house_dynamic:[],
-            house_image:[],house_answer:[]
+            house_image:[],house_answer:[],house_swiper:[]
         }
     }
     componentWillMount() {
+        document.getElementById("root").scrollIntoView(true)
         var list = this.state.nav
         for (var i = 0; i < list.length; i++) {
             if (i === 0) {
@@ -36,7 +37,7 @@ class Detail extends React.Component {
         }
         this.setState({ nav: list })
         var rid=parseInt(url.parse(this.props.location.search,true).query.rid)
-        // console.log(rid)
+        if(!rid) rid=1
         this.get_data(rid)
         this.get_image(rid)
     }
@@ -64,11 +65,9 @@ class Detail extends React.Component {
                     item.height="2.2rem"
                     item.time=deal_date(item.time)
                 }
-                // for(var item of answer){}
-                // console.log(answer)
                 this.setState({detail_info:list,house_type:res.data.data.type,
                     house_advantage:res.data.data.advantage,house_dynamic:res.data.data.dynamic,
-                    house_answer:answer})
+                    house_answer:answer,house_swiper:res.data.data.swiper})
             }
         })
     }
@@ -76,7 +75,6 @@ class Detail extends React.Component {
         // console.log(233)
     }
     answer_btn(key){
-        console.log(key)
         var list=this.state.house_answer
         if(!list[key].cb){
             list[key].cb=!list[key].cb
@@ -158,7 +156,12 @@ class Detail extends React.Component {
                 </div>
             </div>
             <div className="detail_firstimg">
-                <img src="http://cdn.lou86.com/public/uploads/2018-01/16/thumb_880x578_b4f044ef96d408ce99fd8899427975f3.jpg"></img>
+                {
+                    this.state.house_swiper.map((value,key)=>{
+                        return(<img src={value.img} key={key}></img>)
+                    })
+                }
+                
             </div>
             <div className="detail_nav">
                 {
@@ -228,7 +231,7 @@ class Detail extends React.Component {
                     <div className="title">
                         <span className="info">楼盘信息</span><div><span>查看全部</span><img src="http://cdn.lou86.com/public/static/phone/img/icons/right.png"></img></div>
                     </div>
-                    <div className="table"><span className="t_title">{value.mean_t}</span><span className="info">{value.price}</span></div>
+                    <div className="table"><span className="t_title">{value.mean_t}</span><span className="info">{value.price<1000?value.price+"万/套":value.price+"元/㎡"}</span></div>
                     <div className="table"><span className="t_title">{value.finish_t}</span><span className="info">{value.finish}</span></div>
                     <div className="table"><span className="t_title">{value.types_t}</span><span className="info">{value.types}</span></div>
                     <div className="table"><span className="t_title">{value.ptime_t}</span><span className="info">{value.ptime}</span></div>
